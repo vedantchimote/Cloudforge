@@ -114,6 +114,47 @@ services:
     networks:
       - cloudforge-net
 
+  # Discovery Server (Eureka)
+  discovery-server:
+    build:
+      context: ../../services/discovery-server
+      dockerfile: Dockerfile
+    container_name: cloudforge-discovery-server
+    environment:
+      EUREKA_INSTANCE_HOSTNAME: discovery-server
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8761/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - cloudforge-net
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ../../services/api-gateway
+      dockerfile: Dockerfile
+    container_name: cloudforge-api-gateway
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
+    ports:
+      - "8080:8080"
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - cloudforge-net
+
   # OpenLDAP for authentication
   openldap:
     image: osixia/openldap:1.5.0
@@ -162,6 +203,7 @@ services:
       SPRING_LDAP_URLS: ldap://openldap:389
       SPRING_LDAP_BASE: dc=cloudforge,dc=io
       JWT_SECRET: cloudforge-super-secret-key-for-jwt-token-generation-min-256-bits
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
     ports:
       - "8081:8081"
     depends_on:
@@ -184,6 +226,7 @@ services:
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
       SPRING_DATA_REDIS_PASSWORD: redis123
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
     ports:
       - "8082:8082"
     depends_on:
@@ -210,6 +253,7 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       SERVICES_USER_SERVICE_URL: http://user-service:8081
       SERVICES_PRODUCT_SERVICE_URL: http://product-service:8082
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
     ports:
       - "8083:8083"
     depends_on:
@@ -239,6 +283,7 @@ services:
       RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-rzp_test_xxxxx}
       RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-xxxxx}
       RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET:-xxxxx}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
     ports:
       - "8084:8084"
     depends_on:
@@ -268,6 +313,7 @@ services:
       MAIL_PASSWORD: ${MAIL_PASSWORD:-}
       NOTIFICATION_FROM_EMAIL: ${NOTIFICATION_FROM_EMAIL:-noreply@cloudforgetech.in}
       NOTIFICATION_FROM_NAME: ${NOTIFICATION_FROM_NAME:-CloudForge}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
     ports:
       - "8085:8085"
     depends_on:

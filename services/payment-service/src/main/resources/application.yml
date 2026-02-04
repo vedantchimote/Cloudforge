@@ -84,3 +84,13 @@ logging:
     io.cloudforge.paymentservice: DEBUG
     org.springframework.kafka: INFO
     com.stripe: INFO
+
+# Eureka Client
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:eureka123@localhost:8761/eureka/
+    registry-fetch-interval-seconds: 5
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.value}
