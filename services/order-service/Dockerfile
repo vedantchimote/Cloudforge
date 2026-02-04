@@ -1,20 +1,19 @@
 # Build stage
-FROM eclipse-temurin:17-jdk-alpine AS builder
+FROM maven:3.9-eclipse-temurin-17-alpine AS builder
 
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml
-COPY .mvn/ .mvn/
-COPY mvnw pom.xml ./
+# Copy pom.xml first for better caching
+COPY pom.xml .
 
-# Download dependencies (cached layer)
-RUN ./mvnw dependency:go-offline -B
+# Download dependencies (this layer will be cached)
+RUN mvn dependency:go-offline -B
 
 # Copy source code
 COPY src ./src
 
 # Build the application
-RUN ./mvnw package -DskipTests -B
+RUN mvn clean package -DskipTests -B
 
 # Runtime stage
 FROM eclipse-temurin:17-jre-alpine
@@ -25,20 +24,21 @@ WORKDIR /app
 RUN addgroup -g 1001 -S appgroup && \
     adduser -u 1001 -S appuser -G appgroup
 
-# Copy the built JAR from builder stage
+# Copy the built jar from builder stage
 COPY --from=builder /app/target/*.jar app.jar
 
-# Change ownership to non-root user
+# Change ownership
 RUN chown -R appuser:appgroup /app
 
+# Switch to non-root user
 USER appuser
 
 # Expose port
 EXPOSE 8083
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD wget -qO- http://localhost:8083/actuator/health || exit 1
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8083/actuator/health || exit 1
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]

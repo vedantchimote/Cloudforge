@@ -1,24 +1,19 @@
 # Build stage
-FROM eclipse-temurin:17-jdk-alpine AS builder
+FROM maven:3.9-eclipse-temurin-17-alpine AS builder
 
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml first for better caching
+# Copy pom.xml first for better caching
 COPY pom.xml .
-COPY .mvn .mvn
-COPY mvnw .
-
-# Make mvnw executable
-RUN chmod +x mvnw
 
 # Download dependencies (this layer will be cached)
-RUN ./mvnw dependency:go-offline -B
+RUN mvn dependency:go-offline -B
 
 # Copy source code
 COPY src ./src
 
 # Build the application
-RUN ./mvnw clean package -DskipTests -B
+RUN mvn clean package -DskipTests -B
 
 # Runtime stage
 FROM eclipse-temurin:17-jre-alpine
