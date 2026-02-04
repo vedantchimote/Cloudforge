@@ -24,6 +24,8 @@
     {
       "group": "Services",
       "pages": [
+        "services/api-gateway",
+        "services/discovery-server",
         "services/user-service",
         "services/product-service",
         "services/order-service",
