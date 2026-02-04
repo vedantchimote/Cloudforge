@@ -118,6 +118,23 @@ Delete a user by ID.
 
 The `User` entity is persisted via JPA with Flyway migrations.
 
+```mermaid
+erDiagram
+    USER {
+        uuid id PK
+        string username UK
+        string email UK
+        string password_hash
+        string first_name
+        string last_name
+        string role
+        boolean enabled
+        string ldap_dn
+        timestamp created_at
+        timestamp updated_at
+    }
+```
+
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `id` | UUID | PK | Auto-generated UUID |

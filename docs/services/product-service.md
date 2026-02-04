@@ -118,6 +118,24 @@ Adjusts inventory. Use negative values to decrease stock.
 
 The `Product` document in MongoDB:
 
+```mermaid
+erDiagram
+    PRODUCT {
+        string id PK
+        string name
+        string description
+        string category
+        decimal price
+        int stock
+        string sku
+        string[] images
+        string[] tags
+        boolean active
+        timestamp createdAt
+        timestamp updatedAt
+    }
+```
+
 | Field | Type | Description |
 | :--- | :--- | :--- |
 | `id` | String | MongoDB ObjectId |
