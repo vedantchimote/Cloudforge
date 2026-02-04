@@ -1,3 +1,9 @@
+---
+title: "GitOps"
+description: "ArgoCD configuration for continuous deployment"
+icon: "git-alt"
+---
+
 # GitOps Guide
 
 ArgoCD configuration for CloudForge.

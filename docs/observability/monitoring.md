@@ -1,3 +1,9 @@
+---
+title: "Monitoring"
+description: "Prometheus and Grafana setup for observability"
+icon: "chart-line"
+---
+
 # Monitoring Guide
 
 Setting up Prometheus and Grafana for CloudForge observability.

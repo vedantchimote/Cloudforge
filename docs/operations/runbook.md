@@ -1,3 +1,9 @@
+---
+title: "Runbook"
+description: "Incident response procedures and common issue resolution"
+icon: "book"
+---
+
 # Runbook - Incident Response
 
 Operational procedures for handling incidents in CloudForge.

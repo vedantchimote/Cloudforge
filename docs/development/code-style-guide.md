@@ -1,3 +1,9 @@
+---
+title: "Code Style Guide"
+description: "Coding standards and conventions for Java and TypeScript"
+icon: "code"
+---
+
 # Code Style Guide
 
 Coding standards and conventions for CloudForge.

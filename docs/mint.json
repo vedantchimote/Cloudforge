@@ -12,6 +12,12 @@
     "dark": "#FF6600",
     "anchors": "#FF9900"
   },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api"
+    }
+  ],
   "navigation": [
     {
       "group": "Getting Started",
@@ -22,7 +28,7 @@
       ]
     },
     {
-      "group": "Services",
+      "group": "Backend Services",
       "pages": [
         "services/api-gateway",
         "services/discovery-server",
@@ -42,21 +48,79 @@
       ]
     },
     {
-      "group": "API Reference",
+      "group": "Development",
       "pages": [
-        "api/api-reference",
-        "api/database-schema"
+        "development/code-style-guide",
+        "development/java-development",
+        "development/react-development",
+        "development/testing-strategy"
       ]
     },
     {
       "group": "Infrastructure",
       "pages": [
-        "infrastructure/docker-setup"
+        "infrastructure/docker-setup",
+        "infrastructure/docker-guide",
+        "infrastructure/kubernetes-guide",
+        "infrastructure/azure-deployment",
+        "infrastructure/networking"
+      ]
+    },
+    {
+      "group": "DevOps",
+      "pages": [
+        "devops/ci-cd-pipeline",
+        "devops/gitops",
+        "devops/devops-toolchain"
+      ]
+    },
+    {
+      "group": "Security",
+      "pages": [
+        "security/security",
+        "security/secrets-rotation"
+      ]
+    },
+    {
+      "group": "Observability",
+      "pages": [
+        "observability/monitoring",
+        "observability/logging"
+      ]
+    },
+    {
+      "group": "Operations",
+      "pages": [
+        "operations/runbook",
+        "operations/troubleshooting",
+        "operations/disaster-recovery",
+        "operations/performance-tuning",
+        "operations/sla-slo",
+        "operations/cost-optimization"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api/api-reference",
+        "api/database-schema",
+        "api/api-versioning"
       ]
     }
   ],
+  "anchors": [
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/vedantchimote/Cloudforge"
+    },
+    {
+      "name": "Swagger UI",
+      "icon": "code",
+      "url": "http://localhost:8086/swagger-ui.html"
+    }
+  ],
   "footerSocials": {
-    "github": "https://github.com/cloudforgetech",
-    "website": "https://cloudforgetech.in"
+    "github": "https://github.com/vedantchimote/Cloudforge"
   }
 }

@@ -1,3 +1,9 @@
+---
+title: "Troubleshooting"
+description: "Common issues and solutions"
+icon: "wrench"
+---
+
 # Troubleshooting Guide
 
 Common issues and solutions for CloudForge.

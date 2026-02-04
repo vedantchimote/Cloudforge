@@ -1,3 +1,9 @@
+---
+title: "Logging"
+description: "Centralized logging with Loki and Grafana"
+icon: "scroll"
+---
+
 # Logging Guide
 
 Centralized logging with Loki and Grafana.

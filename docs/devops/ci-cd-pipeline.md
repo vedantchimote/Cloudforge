@@ -1,3 +1,9 @@
+---
+title: "CI/CD Pipeline"
+description: "GitHub Actions workflows for build, test, and deployment"
+icon: "rocket"
+---
+
 # CI/CD Pipeline Guide
 
 GitHub Actions workflows for CloudForge.

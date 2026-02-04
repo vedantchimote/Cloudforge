@@ -1,3 +1,9 @@
+---
+title: "Security Guide"
+description: "Security configuration including Vault, LDAP, and security scanning"
+icon: "shield"
+---
+
 # Security Guide
 
 Security configuration for CloudForge including Vault, LDAP, and security scanning.
