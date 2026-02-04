@@ -65,6 +65,42 @@ spring:
           filters:
             - RewritePath=/api/notifications/(?<segment>.*), /api/notifications/${segment}
 
+        # Swagger Routes for downstream services
+        - id: user-service-swagger
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/v3/api-docs/**
+          filters:
+            - RewritePath=/user-service/(?<segment>.*), /${segment}
+
+        - id: product-service-swagger
+          uri: lb://product-service
+          predicates:
+            - Path=/product-service/v3/api-docs/**
+          filters:
+            - RewritePath=/product-service/(?<segment>.*), /${segment}
+
+        - id: order-service-swagger
+          uri: lb://order-service
+          predicates:
+            - Path=/order-service/v3/api-docs/**
+          filters:
+            - RewritePath=/order-service/(?<segment>.*), /${segment}
+
+        - id: payment-service-swagger
+          uri: lb://payment-service
+          predicates:
+            - Path=/payment-service/v3/api-docs/**
+          filters:
+            - RewritePath=/payment-service/(?<segment>.*), /${segment}
+
+        - id: notification-service-swagger
+          uri: lb://notification-service
+          predicates:
+            - Path=/notification-service/v3/api-docs/**
+          filters:
+            - RewritePath=/notification-service/(?<segment>.*), /${segment}
+
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
 
@@ -89,7 +125,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://eureka:eureka123@discovery-server:8761/eureka/
+      defaultZone: http://eureka:eureka123@localhost:8761/eureka/
     registry-fetch-interval-seconds: 5
   instance:
     prefer-ip-address: true
@@ -109,3 +145,30 @@ logging:
   level:
     org.springframework.cloud.gateway: DEBUG
     reactor.netty: INFO
+
+# Swagger/OpenAPI Configuration
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /webjars/swagger-ui/index.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - name: API Gateway
+        url: /v3/api-docs
+      - name: User Service
+        url: /user-service/v3/api-docs
+      - name: Product Service
+        url: /product-service/v3/api-docs
+      - name: Order Service
+        url: /order-service/v3/api-docs
+      - name: Payment Service
+        url: /payment-service/v3/api-docs
+      - name: Notification Service
+        url: /notification-service/v3/api-docs
+  webjars:
+    prefix: /webjars
+
+

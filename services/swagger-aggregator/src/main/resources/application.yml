@@ -1,0 +1,40 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: swagger-aggregator
+
+# Swagger/OpenAPI Configuration - Aggregates all services via proxy
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: User Service
+        url: /api-docs/user-service
+      - name: Product Service
+        url: /api-docs/product-service
+      - name: Order Service
+        url: /api-docs/order-service
+      - name: Payment Service
+        url: /api-docs/payment-service
+      - name: Notification Service
+        url: /api-docs/notification-service
+    urls-primary-name: User Service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.springdoc: DEBUG
