@@ -9,6 +9,13 @@ export const productService = {
         return response.data;
     },
 
+    getAllProducts: async (): Promise<Product[]> => {
+        const response = await api.get<PageResponse<Product>>('/products', {
+            params: { page: 0, size: 100 },
+        });
+        return response.data.content;
+    },
+
     getProductById: async (id: string): Promise<Product> => {
         const response = await api.get<Product>(`/products/${id}`);
         return response.data;
@@ -42,3 +49,4 @@ export const productService = {
         return response.data;
     },
 };
+

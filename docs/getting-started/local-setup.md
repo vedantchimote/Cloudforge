@@ -84,10 +84,13 @@ npm run dev
 | Service | URL |
 |---------|-----|
 | Frontend | http://localhost:5173 |
+| API Gateway | http://localhost:8080 |
+| Eureka Dashboard | http://localhost:8761 |
 | User Service | http://localhost:8081 |
 | Product Service | http://localhost:8082 |
 | Order Service | http://localhost:8083 |
 | Payment Service | http://localhost:8084 |
+| Notification Service | http://localhost:8085 |
 
 ---
 

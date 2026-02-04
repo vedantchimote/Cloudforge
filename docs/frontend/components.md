@@ -9,139 +9,140 @@ This page documents the key reusable components and page components in the Cloud
 
 ## Layout Components
 
-### Navbar
+### Header
 
-A responsive navigation bar with authentication awareness.
+A comprehensive Amazon-style navigation bar.
 
 **Features:**
-- Logo with gradient text
-- Desktop navigation links (Home, Products)
-- Auth state display (Welcome message or Sign In button)
-- Logout functionality
-- Mobile hamburger menu
+- Logo with orange accent
+- Search bar with category dropdown
+- Delivery location indicator
+- Account & Lists dropdown menu
+- Returns & Orders link
+- Shopping Cart with item count badge
+- Secondary navigation bar with categories
 
-**Usage:**
-```tsx
-<Navbar />
-```
+### Footer
 
-The Navbar is rendered on all pages except the login page, configured in `App.tsx`.
+Feature-rich footer with site links and utilities.
+
+**Features:**
+- Back to top button
+- Categorized links (Get to Know Us, Connect with Us, etc.)
+- Copyright and branding
 
 ---
 
 ## Page Components
 
-### LoginPage
-
-Combined login and registration page with form validation.
-
-**Features:**
-- Tab toggle between Sign In and Sign Up
-- Form validation using `react-hook-form` + `zod`
-- Password visibility toggle
-- Error message display
-- Loading spinner during submission
-- Auto-redirect on successful auth
-
-**Forms:**
-| Form | Fields |
-| :--- | :--- |
-| Login | username, password |
-| Register | firstName, lastName, username, email, password |
-
----
-
 ### HomePage
 
-Landing page showcasing the platform.
+Landing page with Amazon-style layout.
 
 **Sections:**
-1. **Hero** - Gradient headline, tagline, CTA buttons
-2. **Features** - 3 feature cards (Fast, Secure, Delivery)
-3. **Categories** - 4 category cards with gradient backgrounds
-4. **Stats** - Platform statistics in glass card
-5. **CTA** - Call to action for non-authenticated users
-6. **Footer** - Branding and copyright
-
----
+1. **Hero Banner** - Gradient background with CTA
+2. **Category Cards** - Grid of product categories
+3. **Today's Deals** - Horizontal list of discounted products
+4. **Featured Products** - Grid of promote products
+5. **Trust Badges** - Icons for delivery, secure payment, returns
 
 ### ProductsPage
 
-Product catalog with filtering and search.
+Product catalog with advanced filtering.
 
 **Features:**
-- Search input
-- Category filter buttons (All, Electronics, Clothing, etc.)
+- Sidebar filters (Category, Price Range, Rating, Prime)
+- Sorting options (Price Low/High, Newest, Featured)
 - Grid/List view toggle
-- Product cards with hover effects
-- Skeleton loading state
-- Pagination (when API returns multiple pages)
-
-**Product Card displays:**
-- Product image placeholder
-- Name
-- Description (truncated)
-- Price (gradient text)
-- Stock status badge
-
----
+- Search results header
+- Responsive layout with mobile filter drawer
 
 ### ProductDetailPage
 
-Single product view with full details.
+Detailed product view.
 
-**Layout:**
-- Back navigation link
-- Image gallery (main image + thumbnails)
-- Product tags
-- Title and rating stars
-- Price
-- Description (multi-line)
-- Stock status indicator
-- Action buttons (Add to Cart, Wishlist, Share)
-- Feature badges (Free Shipping, Warranty, Returns)
-- SKU and Category info
+**Features:**
+- Image gallery with main view and thumbnails
+- Product details (Price, Rating, Description)
+- "Add to Cart" and "Buy Now" buttons
+- Quantity selector
+- Trust badges (Free Delivery, Warranty)
+
+### CartPage
+
+Shopping cart management.
+
+**Features:**
+- List of added items with images and prices
+- Quantity updates and item removal
+- Cart subtotal calculation
+- "Proceed to Buy" button
+
+### CheckoutPage
+
+Secure checkout process.
+
+**Steps:**
+1. **Shipping Address** - Form with validation
+2. **Payment** - Razorpay integration options
+3. **Order Summary** - Final cost breakdown
+
+### OrdersPage
+
+User's order history.
+
+**Features:**
+- List of past orders
+- Order status badges (Processing, Shipped, Delivered)
+- Order totals and dates
+- Link to order details
+
+---
+
+## Reusable Components
+
+### ProductCard
+
+Standard product display component.
+
+**Props:**
+- `id`, `name`, `price`, `imageUrl`
+- `rating`: Displays star rating
+- `dealBadge`: Optional text for deals
+- `isPrime`: Boolean to show Prime badge
+
+### CartItem
+
+Row component for the shopping cart.
+
+**Features:**
+- Product thumbnail and title
+- Quantity +/- controls
+- Delete action
+- Price calculation
 
 ---
 
 ## Type Definitions
 
-Located in `src/types/index.ts`:
+Key interfaces in `src/types/index.ts`:
 
 ```typescript
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  firstName: string | null;
-  lastName: string | null;
-  role: 'USER' | 'ADMIN';
-  enabled: boolean;
-  createdAt: string;
-}
-
 interface Product {
   id: string;
   name: string;
-  description: string;
-  category: string;
   price: number;
-  stock: number;
-  sku: string;
-  images: string[];
-  tags: string[];
-  active: boolean;
-  createdAt: string;
-  updatedAt: string;
+  imageUrl: string;
+  category: string;
+  // ...
 }
 
-interface PageResponse<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  number: number;
-  size: number;
-  first: boolean;
-  last: boolean;
+interface Order {
+  id: string;
+  items: OrderItem[];
+  totalAmount: number;
+  status: string;
+  shippingAddress: Address;
+  // ...
 }
 ```

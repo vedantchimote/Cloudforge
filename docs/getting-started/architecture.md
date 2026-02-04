@@ -5,50 +5,107 @@ description: "High-level system architecture of CloudForge"
 
 # System Architecture
 
-CloudForge follows a microservices architecture pattern, where the application is decomposed into loosely coupled services.
+CloudForge follows a microservices architecture pattern with an API Gateway for routing and service discovery.
 
 ## High-Level Diagram
 
 ```mermaid
-graph LR
+graph TB
     subgraph Frontend
-        A[React App (Port 5173)]
+        A[React App - Vite]
     end
 
-    subgraph API Gateway / Load Balancer
-        G[Reverse Proxy (Planned)]
+    subgraph API Gateway
+        G[Spring Cloud Gateway]
+    end
+
+    subgraph Discovery
+        E[Eureka Server]
     end
 
     subgraph Backend Services
-        B[User Service (Port 8081)]
-        C[Product Service (Port 8082)]
+        US[User Service]
+        PS[Product Service]
+        OS[Order Service]
+        PY[Payment Service]
+        NS[Notification Service]
     end
 
-    subgraph Persistence Layer
-        D[(PostgreSQL)]
-        E[(MongoDB)]
-        F[(Redis)]
+    subgraph Message Broker
+        K[Apache Kafka]
+    end
+
+    subgraph Persistence
+        PG[(PostgreSQL)]
+        MG[(MongoDB)]
+        RD[(Redis)]
+    end
+
+    subgraph External
+        RZ[Razorpay API]
     end
     
-    A --> B
-    A --> C
-    B --> D
-    C --> E
-    C --> F
+    A --> G
+    G --> E
+    G --> US
+    G --> PS
+    G --> OS
+    G --> PY
+    
+    US --> E
+    PS --> E
+    OS --> E
+    PY --> E
+    NS --> E
+    
+    US --> PG
+    OS --> PG
+    PY --> PG
+    PS --> MG
+    PS --> RD
+    
+    OS --> K
+    PY --> K
+    NS --> K
+    
+    PY --> RZ
 ```
 
 ## Services Overview
 
-| Service | Port | Technology | DB | Description |
+| Service | Port | Technology | Database | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| **User Service** | 8081 | Spring Boot | PostgreSQL | Handles user registration, authentication (JWT/LDAP), and profile management. |
-| **Product Service** | 8082 | Spring Boot | MongoDB | Manages product catalog, inventory, and categories. Caches data in Redis. |
-| **Frontend** | 5173 | React/Vite | N/A | Single Page Application (SPA) providing the user interface. |
+| **API Gateway** | 8080 | Spring Cloud Gateway | - | Routes requests, load balancing |
+| **Discovery Server** | 8761 | Eureka Server | - | Service registration & discovery |
+| **User Service** | 8081 | Spring Boot | PostgreSQL | Auth, JWT, user profiles |
+| **Product Service** | 8082 | Spring Boot | MongoDB + Redis | Product catalog, inventory |
+| **Order Service** | 8083 | Spring Boot | PostgreSQL | Order management |
+| **Payment Service** | 8084 | Spring Boot | PostgreSQL | Razorpay integration |
+| **Notification Service** | 8085 | Spring Boot | - | Email/SMS notifications |
+| **Frontend** | 5173 | React + Vite | - | Amazon-style SPA |
+
+## Technology Stack
+
+### Frontend
+- **React 18** with TypeScript
+- **Vite** for fast builds
+- **TailwindCSS** for styling
+- **Zustand** for state management
+- **TanStack Query** for data fetching
+- **Razorpay** for payments
+
+### Backend
+- **Spring Boot 3** microservices
+- **Spring Cloud Gateway** for API routing
+- **Eureka** for service discovery
+- **Apache Kafka** for async messaging
+- **PostgreSQL** for relational data
+- **MongoDB** for product documents
+- **Redis** for caching
 
 ## Data Flow
 
-1.  **Authentication**: Users log in via the Frontend. The User Service validates credentials against the database or LDAP and issues a JWT.
-2.  **Product Browsing**: Frontend fetches product lists from the Product Service. Frequently accessed data (like product details) is cached in Redis for performance.
-3.  **Data Persistence**: 
-    - Structured user data (accounts, roles) resides in **PostgreSQL**.
-    - Flexible product documents reside in **MongoDB**.
+1. **Request Routing**: All requests go through API Gateway which routes to appropriate services via Eureka
+2. **Authentication**: User Service issues JWT tokens validated by all services
+3. **Order Flow**: Orders → Kafka → Payment/Notification services
+4. **Caching**: Product data cached in Redis for performance

@@ -1,182 +1,164 @@
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Zap, Shield, Truck, ArrowRight, Star } from 'lucide-react';
-import { useAuthStore } from '@/store/authStore';
-
-const features = [
-    {
-        icon: Zap,
-        title: 'Lightning Fast',
-        description: 'Built with cutting-edge microservices for blazing performance',
-    },
-    {
-        icon: Shield,
-        title: 'Secure by Default',
-        description: 'Enterprise-grade security with LDAP authentication',
-    },
-    {
-        icon: Truck,
-        title: 'Fast Delivery',
-        description: 'Optimized logistics for quick order fulfillment',
-    },
-];
-
-const categories = [
-    { name: 'Electronics', image: '🎧', color: 'from-blue-500 to-purple-600' },
-    { name: 'Clothing', image: '👕', color: 'from-pink-500 to-rose-600' },
-    { name: 'Home & Garden', image: '🏡', color: 'from-green-500 to-emerald-600' },
-    { name: 'Sports', image: '⚽', color: 'from-orange-500 to-amber-600' },
-];
+import { useQuery } from '@tanstack/react-query';
+import { ChevronRight, Truck, Shield, CreditCard, Headphones } from 'lucide-react';
+import { productService } from '@/services/productService';
+import ProductCard from '@/components/ProductCard';
 
 export default function HomePage() {
-    const { isAuthenticated, user } = useAuthStore();
+    const { data: products, isLoading } = useQuery({
+        queryKey: ['products', 'featured'],
+        queryFn: () => productService.getAllProducts(),
+    });
+
+    const featuredProducts = products?.slice(0, 8) || [];
+    const dealProducts = products?.slice(0, 4) || [];
 
     return (
-        <div className="min-h-screen">
-            {/* Hero Section */}
-            <section className="relative py-20 px-4 overflow-hidden">
-                {/* Background gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/20 via-transparent to-[var(--secondary)]/20" />
-
-                {/* Floating shapes */}
-                <div className="absolute top-20 left-10 w-72 h-72 bg-[var(--primary)]/30 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-20 right-10 w-96 h-96 bg-[var(--secondary)]/20 rounded-full blur-3xl animate-pulse" />
-
-                <div className="relative max-w-6xl mx-auto text-center">
-                    <div className="animate-fadeIn">
-                        <span className="inline-block px-4 py-2 bg-[var(--primary)]/20 text-[var(--primary)] rounded-full text-sm font-medium mb-6">
-                            🚀 Cloud-Native E-Commerce Platform
-                        </span>
-
-                        <h1 className="text-5xl md:text-7xl font-bold mb-6">
-                            Welcome to{' '}
-                            <span className="gradient-text">CloudForge</span>
-                        </h1>
-
-                        <p className="text-xl text-[var(--text-muted)] max-w-2xl mx-auto mb-8">
-                            Experience the future of e-commerce with our microservices-powered platform.
-                            Built for scale, designed for developers.
-                        </p>
-
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Link to="/products" className="btn-primary inline-flex items-center gap-2">
-                                <ShoppingBag className="w-5 h-5" />
-                                Browse Products
-                                <ArrowRight className="w-5 h-5" />
-                            </Link>
-                            {!isAuthenticated && (
-                                <Link to="/login" className="btn-secondary inline-flex items-center gap-2">
-                                    Get Started
-                                </Link>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Features Section */}
-            <section className="py-20 px-4">
-                <div className="max-w-6xl mx-auto">
-                    <h2 className="text-3xl font-bold text-center mb-12">
-                        Why Choose <span className="gradient-text">CloudForge</span>?
-                    </h2>
-
-                    <div className="grid md:grid-cols-3 gap-8">
-                        {features.map((feature, index) => (
-                            <div
-                                key={feature.title}
-                                className="card text-center animate-fadeIn"
-                                style={{ animationDelay: `${index * 0.1}s` }}
-                            >
-                                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[var(--primary)] to-[var(--secondary)] flex items-center justify-center">
-                                    <feature.icon className="w-8 h-8 text-white" />
-                                </div>
-                                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                                <p className="text-[var(--text-muted)]">{feature.description}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Categories Section */}
-            <section className="py-20 px-4 bg-[var(--surface)]/50">
-                <div className="max-w-6xl mx-auto">
-                    <h2 className="text-3xl font-bold text-center mb-12">
-                        Shop by Category
-                    </h2>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        {categories.map((category, index) => (
+        <div className="bg-white">
+            {/* Hero Banner */}
+            <div className="relative bg-gradient-to-br from-orange-50 via-white to-orange-100">
+                <div className="max-w-7xl mx-auto px-4 py-16">
+                    <div className="flex flex-col lg:flex-row items-center gap-8">
+                        <div className="flex-1 text-center lg:text-left">
+                            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                                Welcome to <span className="text-[#FF9900]">CloudForge</span>
+                            </h1>
+                            <p className="text-lg text-gray-600 mb-6 max-w-xl">
+                                Discover amazing products at unbeatable prices. Shop now and enjoy fast, free delivery on eligible orders.
+                            </p>
                             <Link
-                                key={category.name}
-                                to={`/products?category=${category.name}`}
-                                className="group relative overflow-hidden rounded-2xl p-6 text-center transition-all hover:scale-105 animate-fadeIn"
-                                style={{ animationDelay: `${index * 0.1}s` }}
+                                to="/products"
+                                className="inline-flex items-center gap-2 bg-[#FF9900] hover:bg-[#FF6600] text-white font-medium py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all"
                             >
-                                <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-80 group-hover:opacity-100 transition-opacity`} />
-                                <div className="relative">
-                                    <span className="text-5xl mb-4 block">{category.image}</span>
-                                    <h3 className="text-lg font-semibold text-white">{category.name}</h3>
-                                </div>
+                                Shop Now
+                                <ChevronRight size={20} />
                             </Link>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Stats Section */}
-            <section className="py-20 px-4">
-                <div className="max-w-6xl mx-auto">
-                    <div className="glass rounded-3xl p-12">
-                        <div className="grid md:grid-cols-4 gap-8 text-center">
-                            <div className="animate-fadeIn">
-                                <div className="text-4xl font-bold gradient-text mb-2">5</div>
-                                <div className="text-[var(--text-muted)]">Microservices</div>
-                            </div>
-                            <div className="animate-fadeIn" style={{ animationDelay: '0.1s' }}>
-                                <div className="text-4xl font-bold gradient-text mb-2">25+</div>
-                                <div className="text-[var(--text-muted)]">DevOps Tools</div>
-                            </div>
-                            <div className="animate-fadeIn" style={{ animationDelay: '0.2s' }}>
-                                <div className="text-4xl font-bold gradient-text mb-2">100%</div>
-                                <div className="text-[var(--text-muted)]">Cloud Native</div>
-                            </div>
-                            <div className="animate-fadeIn" style={{ animationDelay: '0.3s' }}>
-                                <div className="text-4xl font-bold gradient-text mb-2">∞</div>
-                                <div className="text-[var(--text-muted)]">Scalability</div>
-                            </div>
+                        </div>
+                        <div className="hidden lg:block flex-1">
+                            <div className="w-80 h-80 bg-gradient-to-br from-[#FF9900] to-[#FFD814] rounded-full opacity-30 blur-3xl mx-auto" />
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            {/* CTA Section */}
-            {!isAuthenticated && (
-                <section className="py-20 px-4">
-                    <div className="max-w-4xl mx-auto text-center">
-                        <h2 className="text-4xl font-bold mb-6">Ready to Get Started?</h2>
-                        <p className="text-xl text-[var(--text-muted)] mb-8">
-                            Join thousands of users who trust CloudForge for their e-commerce needs.
-                        </p>
-                        <Link to="/login" className="btn-primary inline-flex items-center gap-2 text-lg px-8 py-4">
-                            Create Your Account
-                            <ArrowRight className="w-5 h-5" />
+            {/* Category Cards */}
+            <div className="max-w-7xl mx-auto px-4 py-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Shop by Category</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[
+                        { title: 'Electronics', image: '🎧', link: '/products?category=electronics' },
+                        { title: 'Fashion', image: '👕', link: '/products?category=fashion' },
+                        { title: 'Home & Kitchen', image: '🏠', link: '/products?category=home' },
+                        { title: 'Deals', image: '🏷️', link: '/products?category=deals' },
+                    ].map((category) => (
+                        <Link
+                            key={category.title}
+                            to={category.link}
+                            className="bg-white rounded-xl border border-gray-200 p-6 hover:border-[#FF9900] hover:shadow-lg transition-all"
+                        >
+                            <div className="text-4xl mb-3">{category.image}</div>
+                            <h3 className="font-bold text-gray-900 mb-1">{category.title}</h3>
+                            <span className="text-sm text-[#FF9900] font-medium">
+                                Shop now →
+                            </span>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+
+            {/* Today's Deals */}
+            <section className="max-w-7xl mx-auto px-4 py-8">
+                <div className="bg-white rounded-xl border border-gray-200 p-6">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-2xl font-bold text-gray-900">Today's Deals</h2>
+                        <Link to="/products?deals=true" className="text-[#FF9900] hover:underline text-sm font-medium">
+                            See all deals →
                         </Link>
                     </div>
-                </section>
-            )}
 
-            {/* Footer */}
-            <footer className="py-8 px-4 border-t border-[var(--border)]">
-                <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div className="flex items-center gap-2">
-                        <span className="text-2xl font-bold gradient-text">CloudForge</span>
-                    </div>
-                    <p className="text-[var(--text-muted)] text-sm">
-                        © 2026 CloudForge. Built with ❤️ using microservices.
-                    </p>
+                    {isLoading ? (
+                        <div className="flex justify-center py-12">
+                            <div className="w-8 h-8 border-4 border-[#FF9900] border-t-transparent rounded-full animate-spin" />
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {dealProducts.map((product) => (
+                                <ProductCard
+                                    key={product.id}
+                                    id={product.id}
+                                    name={product.name}
+                                    price={product.price * 0.8}
+                                    originalPrice={product.price}
+                                    imageUrl={product.imageUrl}
+                                    rating={4.5}
+                                    reviewCount={Math.floor(Math.random() * 1000) + 100}
+                                    category={product.category}
+                                    dealBadge="Limited Deal"
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
-            </footer>
+            </section>
+
+            {/* Featured Products */}
+            <section className="max-w-7xl mx-auto px-4 py-8">
+                <div className="bg-white rounded-xl border border-gray-200 p-6">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-2xl font-bold text-gray-900">Featured Products</h2>
+                        <Link to="/products" className="text-[#FF9900] hover:underline text-sm font-medium">
+                            See all →
+                        </Link>
+                    </div>
+
+                    {isLoading ? (
+                        <div className="flex justify-center py-12">
+                            <div className="w-8 h-8 border-4 border-[#FF9900] border-t-transparent rounded-full animate-spin" />
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {featuredProducts.map((product) => (
+                                <ProductCard
+                                    key={product.id}
+                                    id={product.id}
+                                    name={product.name}
+                                    price={product.price}
+                                    imageUrl={product.imageUrl}
+                                    rating={4 + Math.random()}
+                                    reviewCount={Math.floor(Math.random() * 500) + 50}
+                                    category={product.category}
+                                    isPrime={Math.random() > 0.5}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </section>
+
+            {/* Trust Badges */}
+            <section className="max-w-7xl mx-auto px-4 py-8 mb-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[
+                        { icon: Truck, title: 'Free Delivery', desc: 'On orders over ₹499' },
+                        { icon: Shield, title: 'Secure Payments', desc: '100% protected' },
+                        { icon: CreditCard, title: 'Easy Returns', desc: '10-day return policy' },
+                        { icon: Headphones, title: '24/7 Support', desc: 'Dedicated support' },
+                    ].map((badge, index) => (
+                        <div
+                            key={index}
+                            className="bg-white rounded-xl border border-gray-200 p-6 flex items-center gap-4"
+                        >
+                            <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center shrink-0">
+                                <badge.icon size={24} className="text-[#FF9900]" />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-gray-900">{badge.title}</h3>
+                                <p className="text-sm text-gray-500">{badge.desc}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
         </div>
     );
 }

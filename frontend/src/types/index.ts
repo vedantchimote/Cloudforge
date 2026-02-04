@@ -10,7 +10,7 @@ export interface User {
 }
 
 export interface LoginRequest {
-    username: string;
+    email: string;
     password: string;
 }
 
@@ -36,6 +36,7 @@ export interface Product {
     price: number;
     stock: number;
     sku: string;
+    imageUrl: string;
     images: string[];
     tags: string[];
     active: boolean;
