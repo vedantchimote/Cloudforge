@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Successful</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f4f4f4; }
+        .container { background: #fff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 3px solid #22c55e; padding-bottom: 20px; margin-bottom: 30px; }
+        .logo { font-size: 28px; font-weight: bold; color: #6366f1; }
+        .success-icon { font-size: 48px; margin: 20px 0; }
+        .amount-box { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 25px; border-radius: 10px; text-align: center; margin: 20px 0; }
+        .amount { font-size: 36px; font-weight: bold; }
+        .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
+        .footer { text-align: center; font-size: 12px; color: #888; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">☁️ CloudForge</div>
+        </div>
+        
+        <div style="text-align: center;">
+            <div class="success-icon">💳 ✓</div>
+            <h1 style="color: #22c55e; margin: 0;">Payment Successful!</h1>
+        </div>
+        
+        <p>Hi <span th:text="${customerName}">Customer</span>,</p>
+        <p>Great news! Your payment has been processed successfully.</p>
+        
+        <div class="amount-box">
+            <div style="font-size: 14px; opacity: 0.9;">Amount Paid</div>
+            <div class="amount" th:text="'₹' + ${amount}">₹1,299.00</div>
+        </div>
+        
+        <div style="margin: 25px 0;">
+            <h3>Payment Details</h3>
+            <div class="detail-row">
+                <span>Payment ID:</span>
+                <span th:text="${paymentId}">#PAY-12345</span>
+            </div>
+            <div class="detail-row">
+                <span>Order ID:</span>
+                <span th:text="${orderId}">#ORD-12345</span>
+            </div>
+            <div class="detail-row">
+                <span>Date:</span>
+                <span th:text="${paymentDate}">Jan 15, 2024</span>
+            </div>
+            <div class="detail-row">
+                <span>Method:</span>
+                <span th:text="${paymentMethod}">Card</span>
+            </div>
+        </div>
+        
+        <p style="color: #666; font-size: 14px;">
+            Your order is now being processed. You'll receive a shipping confirmation soon!
+        </p>
+        
+        <div class="footer">
+            <p>© 2024 CloudForge. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

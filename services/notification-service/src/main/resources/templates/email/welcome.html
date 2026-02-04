@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to CloudForge</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f4f4f4; }
+        .container { background: #fff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; padding-bottom: 20px; margin-bottom: 30px; }
+        .logo { font-size: 32px; font-weight: bold; color: #6366f1; }
+        .welcome-banner { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 40px 20px; border-radius: 10px; text-align: center; margin: 20px 0; }
+        .welcome-title { font-size: 28px; font-weight: bold; margin-bottom: 10px; }
+        .feature-box { display: flex; align-items: flex-start; margin: 15px 0; padding: 15px; background: #f8fafc; border-radius: 8px; }
+        .feature-icon { font-size: 24px; margin-right: 15px; }
+        .feature-text h4 { margin: 0 0 5px 0; color: #333; }
+        .feature-text p { margin: 0; color: #666; font-size: 14px; }
+        .button { display: inline-block; padding: 14px 35px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white !important; text-decoration: none; border-radius: 25px; font-weight: bold; }
+        .footer { text-align: center; font-size: 12px; color: #888; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">☁️ CloudForge</div>
+        </div>
+        
+        <div class="welcome-banner">
+            <div class="welcome-title">Welcome Aboard! 🎉</div>
+            <p style="margin: 0; opacity: 0.9;">Your journey with CloudForge begins now</p>
+        </div>
+        
+        <p>Hi <span th:text="${customerName}">there</span>,</p>
+        <p>We're thrilled to have you join the CloudForge family! Your account has been created successfully.</p>
+        
+        <h3>Here's what you can do:</h3>
+        
+        <div class="feature-box">
+            <span class="feature-icon">🛍️</span>
+            <div class="feature-text">
+                <h4>Shop Premium Products</h4>
+                <p>Browse our curated collection of high-quality items.</p>
+            </div>
+        </div>
+        
+        <div class="feature-box">
+            <span class="feature-icon">🚀</span>
+            <div class="feature-text">
+                <h4>Fast Delivery</h4>
+                <p>Get your orders delivered quickly and safely.</p>
+            </div>
+        </div>
+        
+        <div class="feature-box">
+            <span class="feature-icon">💳</span>
+            <div class="feature-text">
+                <h4>Secure Payments</h4>
+                <p>Pay with confidence using our trusted payment partners.</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a th:href="${loginUrl}" class="button">Start Shopping</a>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 CloudForge. All rights reserved.</p>
+            <p>Need help? Contact us at support@cloudforgetech.in</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f4f4f4; }
+        .container { background: #fff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 3px solid #22c55e; padding-bottom: 20px; margin-bottom: 30px; }
+        .logo { font-size: 28px; font-weight: bold; color: #6366f1; }
+        .success-icon { font-size: 48px; margin: 20px 0; }
+        .order-number { background: #f0fdf4; padding: 15px; border-radius: 8px; text-align: center; margin: 20px 0; }
+        .order-id { font-size: 20px; font-weight: bold; color: #22c55e; }
+        .details { margin: 20px 0; }
+        .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .total-row { font-weight: bold; font-size: 18px; color: #333; }
+        .footer { text-align: center; font-size: 12px; color: #888; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
+        .button { display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white !important; text-decoration: none; border-radius: 25px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">☁️ CloudForge</div>
+        </div>
+        
+        <div style="text-align: center;">
+            <div class="success-icon">✅</div>
+            <h1 style="color: #22c55e; margin: 0;">Order Confirmed!</h1>
+        </div>
+        
+        <p>Hi <span th:text="${customerName}">Customer</span>,</p>
+        <p>Thank you for your order! We're excited to get your items on the way.</p>
+        
+        <div class="order-number">
+            <div style="color: #666; font-size: 14px;">Order Number</div>
+            <div class="order-id" th:text="${orderId}">#ORD-12345</div>
+        </div>
+        
+        <div class="details">
+            <h3>Order Summary</h3>
+            <div class="detail-row">
+                <span>Items:</span>
+                <span th:text="${itemCount}">3</span>
+            </div>
+            <div class="detail-row">
+                <span>Shipping Address:</span>
+                <span th:text="${shippingAddress}">123 Main St</span>
+            </div>
+            <div class="detail-row total-row">
+                <span>Total Amount:</span>
+                <span th:text="'₹' + ${totalAmount}">₹1,299.00</span>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a th:href="${trackingUrl}" class="button">Track Your Order</a>
+        </div>
+        
+        <p style="color: #666; font-size: 14px;">
+            You'll receive another email when your order ships. 
+            If you have any questions, reply to this email or contact our support.
+        </p>
+        
+        <div class="footer">
+            <p>© 2024 CloudForge. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

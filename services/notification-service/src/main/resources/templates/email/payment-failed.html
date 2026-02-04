@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Failed</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f4f4f4; }
+        .container { background: #fff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 3px solid #ef4444; padding-bottom: 20px; margin-bottom: 30px; }
+        .logo { font-size: 28px; font-weight: bold; color: #6366f1; }
+        .error-icon { font-size: 48px; margin: 20px 0; }
+        .error-box { background: #fef2f2; border: 1px solid #fecaca; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
+        .button { display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white !important; text-decoration: none; border-radius: 25px; font-weight: bold; }
+        .footer { text-align: center; font-size: 12px; color: #888; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">☁️ CloudForge</div>
+        </div>
+        
+        <div style="text-align: center;">
+            <div class="error-icon">❌</div>
+            <h1 style="color: #ef4444; margin: 0;">Payment Failed</h1>
+        </div>
+        
+        <p>Hi <span th:text="${customerName}">Customer</span>,</p>
+        <p>Unfortunately, we were unable to process your payment for your recent order.</p>
+        
+        <div class="error-box">
+            <strong>Reason:</strong>
+            <p th:text="${failureReason}" style="margin: 5px 0 0 0; color: #dc2626;">Payment could not be completed</p>
+        </div>
+        
+        <div style="margin: 25px 0;">
+            <h3>Order Details</h3>
+            <div class="detail-row">
+                <span>Order ID:</span>
+                <span th:text="${orderId}">#ORD-12345</span>
+            </div>
+            <div class="detail-row">
+                <span>Amount:</span>
+                <span th:text="'₹' + ${amount}">₹1,299.00</span>
+            </div>
+        </div>
+        
+        <p><strong>What to do next:</strong></p>
+        <ul style="color: #666;">
+            <li>Check if your card has sufficient balance</li>
+            <li>Ensure your card details are correct</li>
+            <li>Try using a different payment method</li>
+        </ul>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a th:href="${retryUrl}" class="button">Retry Payment</a>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 CloudForge. All rights reserved.</p>
+            <p>Need help? Contact support@cloudforgetech.in</p>
+        </div>
+    </div>
+</body>
+</html>
