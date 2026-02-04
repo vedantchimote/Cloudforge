@@ -17,6 +17,61 @@ graph TD
     C --> E[(MongoDB)]
 ```
 
+## Class Diagram
+
+```mermaid
+classDiagram
+    class Product {
+        +String id
+        +String name
+        +BigDecimal price
+        +Integer stock
+        +String sku
+        +boolean active
+    }
+
+    class ProductRepository {
+        +Page~Product~ findAll(Pageable)
+        +Optional~Product~ findById(String)
+        +Page~Product~ findByCategory(String, Pageable)
+    }
+
+    class ProductService {
+        +getAllProducts(Pageable)
+        +getProductById(String)
+        +createProduct(ProductDTO)
+        +updateStock(String, int)
+    }
+
+    class ProductController {
+        +getProducts(int, int)
+        +getProduct(String)
+        +createProduct(ProductDTO)
+    }
+
+    ProductController --> ProductService
+    ProductService --> ProductRepository
+    ProductService ..> Product : Manages
+```
+
+## Deployment
+
+```mermaid
+graph TB
+    subgraph Docker Host
+        subgraph "Product Service Network"
+            Container[Product Service Container]
+            Mongo[(MongoDB Container)]
+            Redis[(Redis Container)]
+        end
+        HostPort[Port 8082]
+    end
+
+    HostPort -->|Forward| Container
+    Container -->|Mongo Wire| Mongo
+    Container -->|RESP| Redis
+```
+
 ## Configuration
 
 Key settings in `application.yml`:

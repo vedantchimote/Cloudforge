@@ -43,6 +43,73 @@ graph TD
     end
 ```
 
+## Class Diagram
+
+```mermaid
+classDiagram
+    class Notification {
+        +UUID id
+        +UUID userId
+        +NotificationType type
+        +NotificationChannel channel
+        +String recipient
+        +NotificationStatus status
+        +int retryCount
+    }
+
+    class NotificationRepository {
+        +findByStatus(NotificationStatus)
+        +findByUserId(UUID)
+    }
+
+    class EmailService {
+        +sendEmail(String, String, String)
+        +sendEmailAsync(String, String, String)
+    }
+
+    class TemplateService {
+        +renderTemplate(String, Map)
+        +getSubjectForType(String)
+    }
+
+    class NotificationService {
+        +sendNotification(NotificationRequest)
+        +retryFailedNotifications()
+        +sendWelcomeEmail(UUID, String)
+    }
+
+    class EventConsumer {
+        +handleOrderCreated(OrderCreatedEvent)
+        +handlePaymentCompleted(PaymentCompletedEvent)
+    }
+
+    EventConsumer --> NotificationService
+    NotificationService --> NotificationRepository
+    NotificationService --> EmailService
+    NotificationService --> TemplateService
+    NotificationService ..> Notification : Manages
+```
+
+## Deployment
+
+```mermaid
+graph TB
+    subgraph Docker Host
+        subgraph "Notification Service Network"
+            Container[Notification Service Container]
+            DB[(PostgreSQL Container)]
+            Kafka{Kafka Broker}
+            SMTP[SMTP Server]
+        end
+        HostPort[Port 8085]
+    end
+
+    HostPort -->|Forward| Container
+    Container -->|JDBC:5432| DB
+    Container -->|TCP:29092| Kafka
+    Container -->|SMTP:587| SMTP
+```
+
 ## Notification Flow
 
 ```mermaid

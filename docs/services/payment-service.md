@@ -43,6 +43,76 @@ graph TD
     end
 ```
 
+## Class Diagram
+
+```mermaid
+classDiagram
+    class Payment {
+        +UUID id
+        +UUID orderId
+        +BigDecimal amount
+        +String currency
+        +PaymentStatus status
+        +String razorpayOrderId
+        +String razorpayPaymentId
+    }
+
+    class PaymentRepository {
+        +Optional~Payment~ findByOrderId(UUID)
+        +Optional~Payment~ findByRazorpayOrderId(String)
+    }
+
+    class RazorpayService {
+        +createOrder(BigDecimal, String, String)
+        +verifySignature(String, String, String)
+        +fetchPayment(String)
+    }
+
+    class IdempotencyService {
+        +boolean isDuplicate(String, String)
+        +void markProcessed(String, String)
+    }
+
+    class PaymentService {
+        +initiatePayment(PaymentRequest)
+        +verifyPayment(PaymentVerificationRequest)
+        +processRefund(UUID)
+    }
+
+    class PaymentController {
+        +initiate(PaymentRequest)
+        +verify(PaymentVerificationRequest)
+    }
+
+    PaymentController --> PaymentService
+    PaymentService --> RazorpayService
+    PaymentService --> IdempotencyService
+    PaymentService --> PaymentRepository
+    PaymentService --> EventPublisher
+```
+
+## Deployment
+
+```mermaid
+graph TB
+    subgraph Docker Host
+        subgraph "Payment Service Network"
+            Container[Payment Service Container]
+            DB[(PostgreSQL Container)]
+            Redis[(Redis Container)]
+            Kafka{Kafka Broker}
+            Razorpay[Razorpay API]
+        end
+        HostPort[Port 8084]
+    end
+
+    HostPort -->|Forward| Container
+    Container -->|JDBC:5432| DB
+    Container -->|RESP| Redis
+    Container -->|TCP:29092| Kafka
+    Container -->|HTTPS| Razorpay
+```
+
 ## Payment Flow
 
 The payment process involves frontend integration with Razorpay checkout.

@@ -41,6 +41,78 @@ graph TD
     end
 ```
 
+## Class Diagram
+
+```mermaid
+classDiagram
+    class Order {
+        +UUID id
+        +UUID userId
+        +OrderStatus status
+        +BigDecimal totalAmount
+        +List~OrderItem~ items
+        +String shippingAddress
+    }
+
+    class OrderItem {
+        +String productId
+        +String productName
+        +int quantity
+        +BigDecimal unitPrice
+    }
+
+    class Cart {
+        +UUID userId
+        +List~CartItem~ items
+        +BigDecimal total
+    }
+
+    class OrderService {
+        +createOrder(OrderRequest)
+        +getUserOrders(UUID, Pageable)
+        +cancelOrder(UUID)
+    }
+
+    class CartService {
+        +getCart(UUID)
+        +addToCart(UUID, CartItemRequest)
+        +removeItem(UUID, String)
+        +checkout(UUID)
+    }
+
+    class OrderController {
+        +createOrder(OrderRequest)
+        +getOrders(int, int)
+    }
+
+    OrderController --> OrderService
+    OrderService --> OrderRepository
+    OrderService --> ProductClient
+    OrderService --> UserClient
+    OrderService --> EventPublisher
+    Order "1" *-- "*" OrderItem : contains
+```
+
+## Deployment
+
+```mermaid
+graph TB
+    subgraph Docker Host
+        subgraph "Order Service Network"
+            Container[Order Service Container]
+            DB[(PostgreSQL Container)]
+            Redis[(Redis Container)]
+            Kafka{Kafka Broker}
+        end
+        HostPort[Port 8083]
+    end
+
+    HostPort -->|Forward| Container
+    Container -->|JDBC:5432| DB
+    Container -->|RESP| Redis
+    Container -->|TCP:29092| Kafka
+```
+
 ## Order Status Flow
 
 Orders transition through specific states during their lifecycle.

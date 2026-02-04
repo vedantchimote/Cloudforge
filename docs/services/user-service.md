@@ -22,6 +22,65 @@ graph TD
     E --> I[(PostgreSQL)]
 ```
 
+## Class Diagram
+
+```mermaid
+classDiagram
+    class User {
+        +UUID id
+        +String username
+        +String email
+        +String password
+        +String role
+    }
+
+    class UserRepository {
+        +Optional~User~ findByUsername(String)
+        +Optional~User~ findByEmail(String)
+        +Boolean existsByUsername(String)
+        +Boolean existsByEmail(String)
+    }
+
+    class AuthService {
+        +register(RegisterRequest)
+        +login(LoginRequest)
+    }
+
+    class UserService {
+        +getUserProfile(UUID)
+        +updateProfile(UUID, UserDTO)
+    }
+
+    class AuthController {
+        +register(RegisterRequest)
+        +login(LoginRequest)
+    }
+
+    AuthController --> AuthService
+    AuthService --> UserRepository
+    AuthService --> JwtTokenProvider
+    UserService --> UserRepository
+    User "1" -- "1" UserRepository : Managed by
+```
+
+## Deployment
+
+The service runs as a containerized Spring Boot application.
+
+```mermaid
+graph TB
+    subgraph Docker Host
+        subgraph "User Service Network"
+            Container[User Service Container]
+            DB[(PostgreSQL Container)]
+        end
+        HostPort[Port 8081]
+    end
+
+    HostPort -->|Forward| Container
+    Container -->|JDBC:5432| DB
+```
+
 ## Configuration
 
 The service is configured via `application.yml`:

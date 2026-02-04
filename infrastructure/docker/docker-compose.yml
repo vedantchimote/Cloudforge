@@ -222,6 +222,62 @@ services:
     networks:
       - cloudforge-net
 
+  # Payment Service
+  payment-service:
+    build:
+      context: ../../services/payment-service
+      dockerfile: Dockerfile
+    container_name: cloudforge-payment-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudforge_payments
+      SPRING_DATASOURCE_USERNAME: cloudforge
+      SPRING_DATASOURCE_PASSWORD: cloudforge123
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_PASSWORD: redis123
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-rzp_test_xxxxx}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-xxxxx}
+      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET:-xxxxx}
+    ports:
+      - "8084:8084"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - cloudforge-net
+
+  # Notification Service
+  notification-service:
+    build:
+      context: ../../services/notification-service
+      dockerfile: Dockerfile
+    container_name: cloudforge-notification-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudforge_notifications
+      SPRING_DATASOURCE_USERNAME: cloudforge
+      SPRING_DATASOURCE_PASSWORD: cloudforge123
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-noreply@cloudforgetech.in}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      NOTIFICATION_FROM_EMAIL: ${NOTIFICATION_FROM_EMAIL:-noreply@cloudforgetech.in}
+      NOTIFICATION_FROM_NAME: ${NOTIFICATION_FROM_NAME:-CloudForge}
+    ports:
+      - "8085:8085"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - cloudforge-net
+
 networks:
   cloudforge-net:
     driver: bridge
