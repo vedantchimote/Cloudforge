@@ -164,6 +164,15 @@ List all users in the system.
 #### DELETE `/api/users/{id}` (Admin Only)
 Delete a user by ID.
 
+### Security Configuration
+
+The `SecurityConfig` class has been updated to explicitly permit access to standard OpenAPI endpoints to support the Swagger Aggregator:
+
+- `/v3/api-docs/**`
+- `/swagger-ui/**`
+- `/swagger-ui.html`
+- `/error`
+
 ## Security Components
 
 | Component | Purpose |

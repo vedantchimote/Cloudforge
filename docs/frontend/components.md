@@ -121,6 +121,24 @@ Row component for the shopping cart.
 - Delete action
 - Price calculation
 
+### RazorpayButton
+
+Wrapper component for the Razorpay checkout modal.
+
+**Props:**
+- `amount`: Transaction amount
+- `onSuccess`: Callback for successful payment
+- `onFailure`: Callback for failed/cancelled payment
+
+### AddressForm
+
+Reusable form for capturing shipping/billing addresses with validation.
+
+**Features:**
+- Zod schema validation
+- Indian state/city selection help
+- Integrated with React Hook Form
+
 ---
 
 ## Type Definitions

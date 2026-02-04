@@ -45,7 +45,10 @@ The Gateway is configured to route traffic based on URL paths.
 | `/api/orders/**` | `order-service` | Order processing |
 | `/api/cart/**` | `order-service` | Shopping cart management |
 | `/api/payments/**` | `payment-service` | Payment processing |
+| `/api/payments/**` | `payment-service` | Payment processing |
 | `/api/notifications/**` | `notification-service` | Notification preferences and history |
+| `/swagger-ui.html` | `swagger-aggregator` | Unified API Documentation |
+| `/v3/api-docs/**` | `swagger-aggregator` | Proxied API Definitions |
 
 ## Configuration Details
 

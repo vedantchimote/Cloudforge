@@ -91,6 +91,7 @@ npm run dev
 | Order Service | http://localhost:8083 |
 | Payment Service | http://localhost:8084 |
 | Notification Service | http://localhost:8085 |
+| Swagger Aggregator | http://localhost:8086 |
 
 ---
 
