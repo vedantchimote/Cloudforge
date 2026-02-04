@@ -1,0 +1,151 @@
+version: '3.8'
+
+services:
+  # PostgreSQL for User Service
+  postgres:
+    image: postgres:15-alpine
+    container_name: cloudforge-postgres
+    environment:
+      POSTGRES_DB: cloudforge
+      POSTGRES_USER: cloudforge
+      POSTGRES_PASSWORD: cloudforge123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cloudforge -d cloudforge"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cloudforge-net
+
+  # MongoDB for Product Service
+  mongodb:
+    image: mongo:7
+    container_name: cloudforge-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongo123
+      MONGO_INITDB_DATABASE: products
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cloudforge-net
+
+  # Redis for caching
+  redis:
+    image: redis:7-alpine
+    container_name: cloudforge-redis
+    command: redis-server --requirepass redis123
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "redis123", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cloudforge-net
+
+  # OpenLDAP for authentication
+  openldap:
+    image: osixia/openldap:1.5.0
+    container_name: cloudforge-ldap
+    environment:
+      LDAP_ORGANISATION: "CloudForge"
+      LDAP_DOMAIN: "cloudforge.io"
+      LDAP_ADMIN_PASSWORD: admin123
+      LDAP_CONFIG_PASSWORD: config123
+      LDAP_READONLY_USER: "true"
+      LDAP_READONLY_USER_USERNAME: readonly
+      LDAP_READONLY_USER_PASSWORD: readonly123
+    ports:
+      - "389:389"
+      - "636:636"
+    volumes:
+      - ldap_data:/var/lib/ldap
+      - ldap_config:/etc/ldap/slapd.d
+    networks:
+      - cloudforge-net
+
+  # phpLDAPadmin for LDAP management (optional, helpful for testing)
+  ldapadmin:
+    image: osixia/phpldapadmin:0.9.0
+    container_name: cloudforge-ldapadmin
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: openldap
+      PHPLDAPADMIN_HTTPS: "false"
+    ports:
+      - "8090:80"
+    depends_on:
+      - openldap
+    networks:
+      - cloudforge-net
+
+  # User Service
+  user-service:
+    build:
+      context: ../../services/user-service
+      dockerfile: Dockerfile
+    container_name: cloudforge-user-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudforge
+      SPRING_DATASOURCE_USERNAME: cloudforge
+      SPRING_DATASOURCE_PASSWORD: cloudforge123
+      SPRING_LDAP_URLS: ldap://openldap:389
+      SPRING_LDAP_BASE: dc=cloudforge,dc=io
+      JWT_SECRET: cloudforge-super-secret-key-for-jwt-token-generation-min-256-bits
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      openldap:
+        condition: service_started
+    networks:
+      - cloudforge-net
+
+  # Product Service
+  product-service:
+    build:
+      context: ../../services/product-service
+      dockerfile: Dockerfile
+    container_name: cloudforge-product-service
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://root:mongo123@mongodb:27017/products?authSource=admin
+      SPRING_DATA_MONGODB_DATABASE: products
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_PASSWORD: redis123
+    ports:
+      - "8082:8082"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - cloudforge-net
+
+networks:
+  cloudforge-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  mongodb_data:
+  redis_data:
+  ldap_data:
+  ldap_config:
+

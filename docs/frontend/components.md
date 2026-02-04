@@ -1,192 +1,147 @@
-# Frontend Components Library
-
-Comprehensive UI component documentation for CloudForge.
-
+---
+title: "Components"
+description: "Reusable UI Components"
 ---
 
-## 📋 Component Categories
+# Frontend Components
 
-| Category | Components |
-|----------|------------|
-| **UI Primitives** | Button, Input, Select, Checkbox, Radio |
-| **Layout** | Container, Grid, Stack, Divider |
-| **Navigation** | Navbar, Sidebar, Breadcrumb, Tabs |
-| **Feedback** | Alert, Toast, Spinner, Skeleton |
-| **Overlay** | Modal, Drawer, Dropdown, Tooltip |
-| **Data Display** | Card, Table, Badge, Avatar |
+This page documents the key reusable components and page components in the CloudForge frontend.
 
----
+## Layout Components
 
-## 🔘 Button Component
+### Navbar
 
+A responsive navigation bar with authentication awareness.
+
+**Features:**
+- Logo with gradient text
+- Desktop navigation links (Home, Products)
+- Auth state display (Welcome message or Sign In button)
+- Logout functionality
+- Mobile hamburger menu
+
+**Usage:**
 ```tsx
-// src/components/ui/Button.tsx
-import { forwardRef } from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { Loader2 } from 'lucide-react';
+<Navbar />
+```
 
-const buttonVariants = cva(
-  'inline-flex items-center justify-center rounded-lg font-medium transition-all',
-  {
-    variants: {
-      variant: {
-        primary: 'bg-indigo-600 text-white hover:bg-indigo-700',
-        secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200',
-        outline: 'border-2 border-gray-300 hover:bg-gray-50',
-        ghost: 'hover:bg-gray-100',
-        danger: 'bg-red-600 text-white hover:bg-red-700',
-      },
-      size: {
-        sm: 'h-8 px-3 text-sm',
-        md: 'h-10 px-4',
-        lg: 'h-12 px-6 text-lg',
-      },
-    },
-    defaultVariants: { variant: 'primary', size: 'md' },
-  }
-);
+The Navbar is rendered on all pages except the login page, configured in `App.tsx`.
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-  VariantProps<typeof buttonVariants> {
-  loading?: boolean;
+---
+
+## Page Components
+
+### LoginPage
+
+Combined login and registration page with form validation.
+
+**Features:**
+- Tab toggle between Sign In and Sign Up
+- Form validation using `react-hook-form` + `zod`
+- Password visibility toggle
+- Error message display
+- Loading spinner during submission
+- Auto-redirect on successful auth
+
+**Forms:**
+| Form | Fields |
+| :--- | :--- |
+| Login | username, password |
+| Register | firstName, lastName, username, email, password |
+
+---
+
+### HomePage
+
+Landing page showcasing the platform.
+
+**Sections:**
+1. **Hero** - Gradient headline, tagline, CTA buttons
+2. **Features** - 3 feature cards (Fast, Secure, Delivery)
+3. **Categories** - 4 category cards with gradient backgrounds
+4. **Stats** - Platform statistics in glass card
+5. **CTA** - Call to action for non-authenticated users
+6. **Footer** - Branding and copyright
+
+---
+
+### ProductsPage
+
+Product catalog with filtering and search.
+
+**Features:**
+- Search input
+- Category filter buttons (All, Electronics, Clothing, etc.)
+- Grid/List view toggle
+- Product cards with hover effects
+- Skeleton loading state
+- Pagination (when API returns multiple pages)
+
+**Product Card displays:**
+- Product image placeholder
+- Name
+- Description (truncated)
+- Price (gradient text)
+- Stock status badge
+
+---
+
+### ProductDetailPage
+
+Single product view with full details.
+
+**Layout:**
+- Back navigation link
+- Image gallery (main image + thumbnails)
+- Product tags
+- Title and rating stars
+- Price
+- Description (multi-line)
+- Stock status indicator
+- Action buttons (Add to Cart, Wishlist, Share)
+- Feature badges (Free Shipping, Warranty, Returns)
+- SKU and Category info
+
+---
+
+## Type Definitions
+
+Located in `src/types/index.ts`:
+
+```typescript
+interface User {
+  id: string;
+  username: string;
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+  role: 'USER' | 'ADMIN';
+  enabled: boolean;
+  createdAt: string;
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant, size, loading, children, disabled, ...props }, ref) => (
-    <button
-      ref={ref}
-      className={buttonVariants({ variant, size })}
-      disabled={disabled || loading}
-      {...props}
-    >
-      {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-      {children}
-    </button>
-  )
-);
-```
-
----
-
-## 📝 Input Component
-
-```tsx
-// src/components/ui/Input.tsx
-import { forwardRef, InputHTMLAttributes } from 'react';
-
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-  error?: string;
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+  stock: number;
+  sku: string;
+  images: string[];
+  tags: string[];
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, className, ...props }, ref) => (
-    <div className="w-full">
-      {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          {label}
-        </label>
-      )}
-      <input
-        ref={ref}
-        className={`block w-full rounded-lg border px-4 py-2.5
-          ${error ? 'border-red-500' : 'border-gray-300'}
-          focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20`}
-        {...props}
-      />
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-    </div>
-  )
-);
+interface PageResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  number: number;
+  size: number;
+  first: boolean;
+  last: boolean;
+}
 ```
-
----
-
-## 📦 Card Component
-
-```tsx
-// src/components/ui/Card.tsx
-export const Card = ({ children, className }) => (
-  <div className={`rounded-xl border bg-white shadow-sm ${className}`}>
-    {children}
-  </div>
-);
-
-export const CardHeader = ({ children }) => (
-  <div className="p-6 pb-0">{children}</div>
-);
-
-export const CardContent = ({ children }) => (
-  <div className="p-6">{children}</div>
-);
-
-export const CardFooter = ({ children }) => (
-  <div className="flex items-center p-6 pt-0">{children}</div>
-);
-```
-
----
-
-## 🔔 Alert Component
-
-```tsx
-// src/components/ui/Alert.tsx
-const variants = {
-  info: 'bg-blue-50 text-blue-800 border-blue-200',
-  success: 'bg-green-50 text-green-800 border-green-200',
-  warning: 'bg-yellow-50 text-yellow-800 border-yellow-200',
-  error: 'bg-red-50 text-red-800 border-red-200',
-};
-
-export const Alert = ({ variant = 'info', children }) => (
-  <div className={`rounded-lg border p-4 ${variants[variant]}`} role="alert">
-    {children}
-  </div>
-);
-```
-
----
-
-## ⏳ Spinner Component
-
-```tsx
-// src/components/ui/Spinner.tsx
-const sizes = { sm: 'h-4 w-4', md: 'h-6 w-6', lg: 'h-10 w-10' };
-
-export const Spinner = ({ size = 'md' }) => (
-  <div
-    className={`animate-spin rounded-full border-2 border-indigo-600 
-      border-t-transparent ${sizes[size]}`}
-    role="status"
-  >
-    <span className="sr-only">Loading...</span>
-  </div>
-);
-```
-
----
-
-## 🏷️ Badge Component
-
-```tsx
-// src/components/ui/Badge.tsx
-const variants = {
-  default: 'bg-gray-100 text-gray-800',
-  primary: 'bg-indigo-100 text-indigo-800',
-  success: 'bg-green-100 text-green-800',
-  error: 'bg-red-100 text-red-800',
-};
-
-export const Badge = ({ variant = 'default', children }) => (
-  <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${variants[variant]}`}>
-    {children}
-  </span>
-);
-```
-
----
-
-## 📚 Related Docs
-
-- [React Development Guide](react-development.md)
-- [Pages Guide](pages-guide.md)

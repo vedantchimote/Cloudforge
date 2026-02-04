@@ -1,177 +1,54 @@
+---
+title: "Architecture"
+description: "High-level system architecture of CloudForge"
+---
+
 # System Architecture
 
-CloudForge is a cloud-native e-commerce platform built using microservices architecture.
+CloudForge follows a microservices architecture pattern, where the application is decomposed into loosely coupled services.
 
----
-
-## 🏗️ High-Level Architecture
+## High-Level Diagram
 
 ```mermaid
-flowchart TB
-    subgraph "Client Layer"
-        WEB[🌐 React Frontend]
-        MOBILE[📱 Mobile App]
+graph LR
+    subgraph Frontend
+        A[React App (Port 5173)]
     end
 
-    subgraph "API Layer"
-        GW[API Gateway]
+    subgraph API Gateway / Load Balancer
+        G[Reverse Proxy (Planned)]
     end
 
-    subgraph "Service Layer"
-        US[👤 User Service]
-        PS[📦 Product Service]
-        OS[🛒 Order Service]
-        PY[💳 Payment Service]
-        NS[📧 Notification Service]
+    subgraph Backend Services
+        B[User Service (Port 8081)]
+        C[Product Service (Port 8082)]
     end
 
-    subgraph "Data Layer"
-        PG[(PostgreSQL)]
-        MG[(MongoDB)]
-        RD[(Redis)]
+    subgraph Persistence Layer
+        D[(PostgreSQL)]
+        E[(MongoDB)]
+        F[(Redis)]
     end
-
-    subgraph "Messaging"
-        KF[Apache Kafka]
-    end
-
-    subgraph "Identity"
-        LDAP[(OpenLDAP)]
-        VLT[HashiCorp Vault]
-    end
-
-    WEB --> GW
-    MOBILE --> GW
-    GW --> US & PS & OS & PY & NS
-    US --> PG & LDAP
-    PS --> MG
-    OS --> PG
-    PY --> PG & RD
-    OS & PY --> KF --> NS
-    US & PS & OS & PY --> VLT
+    
+    A --> B
+    A --> C
+    B --> D
+    C --> E
+    C --> F
 ```
 
----
+## Services Overview
 
-## 🧩 Microservices
+| Service | Port | Technology | DB | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| **User Service** | 8081 | Spring Boot | PostgreSQL | Handles user registration, authentication (JWT/LDAP), and profile management. |
+| **Product Service** | 8082 | Spring Boot | MongoDB | Manages product catalog, inventory, and categories. Caches data in Redis. |
+| **Frontend** | 5173 | React/Vite | N/A | Single Page Application (SPA) providing the user interface. |
 
-### User Service
-- **Responsibility:** Authentication, authorization, user management
-- **Database:** PostgreSQL
-- **Dependencies:** OpenLDAP, Vault
-- **Port:** 8081
+## Data Flow
 
-### Product Service
-- **Responsibility:** Product catalog, categories, inventory
-- **Database:** MongoDB
-- **Port:** 8082
-
-### Order Service
-- **Responsibility:** Cart, orders, order history
-- **Database:** PostgreSQL
-- **Dependencies:** Product Service, Payment Service, Kafka
-- **Port:** 8083
-
-### Payment Service
-- **Responsibility:** Payment processing, refunds, transactions
-- **Database:** PostgreSQL
-- **Dependencies:** Redis (idempotency), Kafka
-- **Port:** 8084
-
-### Notification Service
-- **Responsibility:** Email/SMS notifications
-- **Dependencies:** Kafka (event consumer)
-- **Port:** 8085
-
----
-
-## 🔄 Communication Patterns
-
-| Pattern | Use Case |
-|---------|----------|
-| **Synchronous (REST)** | Frontend → Services, Service → Service queries |
-| **Asynchronous (Kafka)** | Order events, Payment events → Notifications |
-
----
-
-## 🗄️ Data Architecture
-
-```mermaid
-erDiagram
-    USER ||--o{ ORDER : places
-    ORDER ||--|{ ORDER_ITEM : contains
-    PRODUCT ||--o{ ORDER_ITEM : "is in"
-    ORDER ||--o| PAYMENT : "has"
-    
-    USER {
-        uuid id PK
-        string email
-        string password_hash
-        string role
-        timestamp created_at
-    }
-    
-    PRODUCT {
-        uuid id PK
-        string name
-        string description
-        decimal price
-        int stock
-    }
-    
-    ORDER {
-        uuid id PK
-        uuid user_id FK
-        string status
-        decimal total
-        timestamp created_at
-    }
-    
-    PAYMENT {
-        uuid id PK
-        uuid order_id FK
-        string status
-        decimal amount
-        string transaction_id
-    }
-```
-
----
-
-## 🔐 Security Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      Security Layers                             │
-├─────────────────────────────────────────────────────────────────┤
-│  WAF / DDoS Protection (Azure Front Door)                       │
-├─────────────────────────────────────────────────────────────────┤
-│  TLS Termination (Ingress Controller)                           │
-├─────────────────────────────────────────────────────────────────┤
-│  Authentication (JWT + LDAP)                                    │
-├─────────────────────────────────────────────────────────────────┤
-│  Authorization (RBAC)                                           │
-├─────────────────────────────────────────────────────────────────┤
-│  Secrets Management (HashiCorp Vault)                           │
-├─────────────────────────────────────────────────────────────────┤
-│  Network Policies (K8s NetworkPolicy)                           │
-└─────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 📊 Observability Stack
-
-| Component | Tool | Purpose |
-|-----------|------|---------|
-| Metrics | Prometheus | Collect & store metrics |
-| Visualization | Grafana | Dashboards |
-| Logging | Loki | Log aggregation |
-| Tracing | Zipkin | Distributed tracing |
-| Alerting | Alertmanager | Alert routing |
-
----
-
-## 🚀 Deployment Architecture
-
-See [Kubernetes Guide](kubernetes-guide.md) and [Azure Deployment](azure-deployment.md) for details.
+1.  **Authentication**: Users log in via the Frontend. The User Service validates credentials against the database or LDAP and issues a JWT.
+2.  **Product Browsing**: Frontend fetches product lists from the Product Service. Frequently accessed data (like product details) is cached in Redis for performance.
+3.  **Data Persistence**: 
+    - Structured user data (accounts, roles) resides in **PostgreSQL**.
+    - Flexible product documents reside in **MongoDB**.
