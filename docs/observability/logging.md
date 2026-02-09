@@ -12,8 +12,11 @@ Centralized logging with Loki and Grafana.
 
 ## 🏗️ Logging Stack
 
-```
-Microservices ──▶ Promtail ──▶ Loki ──▶ Grafana
+```mermaid
+graph LR
+    S[Microservices] --> P[Promtail]
+    P --> L[Loki]
+    L --> G[Grafana]
 ```
 
 ---

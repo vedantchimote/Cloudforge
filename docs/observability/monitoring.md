@@ -12,16 +12,20 @@ Setting up Prometheus and Grafana for CloudForge observability.
 
 ## 🏗️ Monitoring Stack
 
-```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│ Microservices│────▶│  Prometheus  │────▶│   Grafana    │
-│  /metrics    │     │   Scrape     │     │  Dashboards  │
-└──────────────┘     └──────────────┘     └──────────────┘
-                            │
-                            ▼
-                     ┌──────────────┐     ┌──────────────┐
-                     │ Alertmanager │────▶│    Slack     │
-                     └──────────────┘     └──────────────┘
+```mermaid
+graph LR
+    subgraph Services
+        S[Microservices] -- /metrics --> P[Prometheus Scrape]
+    end
+    
+    subgraph Observability
+        P --> G[Grafana Dashboards]
+        P --> A[Alertmanager]
+    end
+    
+    subgraph Notifications
+        A --> SL[Slack Alerts]
+    end
 ```
 
 ---
