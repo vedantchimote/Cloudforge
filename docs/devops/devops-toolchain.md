@@ -6,18 +6,58 @@
 
 ## 📋 Toolchain Overview
 
-```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                          COMPLETE DEVOPS TOOLCHAIN                          │
-├─────────────┬─────────────┬─────────────┬─────────────┬────────────────────┤
-│   SOURCE    │    BUILD    │    TEST     │   DEPLOY    │     OPERATE        │
-│   CONTROL   │   & PACKAGE │             │             │                    │
-├─────────────┼─────────────┼─────────────┼─────────────┼────────────────────┤
-│ Git         │ Maven       │ JUnit       │ Kubernetes  │ Prometheus         │
-│ GitHub      │ Gradle      │ Selenium    │ Helm        │ Grafana            │
-│ GitLab      │ npm         │ SonarQube   │ ArgoCD      │ ELK Stack          │
-│ Bitbucket   │ Docker      │ Trivy       │ Terraform   │ PagerDuty          │
-└─────────────┴─────────────┴─────────────┴─────────────┴────────────────────┘
+```mermaid
+graph LR
+    subgraph Source_Control [Source Control]
+        direction TB
+        Git
+        GitHub
+        GitLab
+        Bitbucket
+    end
+    
+    subgraph Build [Build & Package]
+        direction TB
+        Maven
+        Gradle
+        npm
+        Docker
+    end
+    
+    subgraph Test [Test]
+        direction TB
+        JUnit
+        Selenium
+        SonarQube
+        Trivy
+    end
+    
+    subgraph Deploy [Deploy]
+        direction TB
+        Kubernetes
+        Helm
+        ArgoCD
+        Terraform
+    end
+    
+    subgraph Operate [Operate]
+        direction TB
+        Prometheus
+        Grafana
+        ELK[ELK Stack]
+        PagerDuty
+    end
+    
+    Source_Control --> Build
+    Build --> Test
+    Test --> Deploy
+    Deploy --> Operate
+    
+    style Source_Control fill:#e3f2fd,stroke:#1565c0
+    style Build fill:#fff3e0,stroke:#e65100
+    style Test fill:#e8f5e9,stroke:#2e7d32
+    style Deploy fill:#f3e5f5,stroke:#7b1fa2
+    style Operate fill:#ffebee,stroke:#c62828
 ```
 
 ---
