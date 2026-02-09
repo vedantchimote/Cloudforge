@@ -14,56 +14,35 @@ icon: "screwdriver-wrench"
 
 ```mermaid
 graph LR
-    subgraph Source_Control [Source Control]
-        direction TB
+    subgraph Source["Source Control"]
         Git
         GitHub
-        GitLab
-        Bitbucket
     end
     
-    subgraph Build [Build & Package]
-        direction TB
+    subgraph Build["Build"]
         Maven
-        Gradle
-        npm
         Docker
     end
     
-    subgraph Test [Test]
-        direction TB
+    subgraph Test["Test"]
         JUnit
-        Selenium
         SonarQube
-        Trivy
     end
     
-    subgraph Deploy [Deploy]
-        direction TB
+    subgraph Deploy["Deploy"]
         Kubernetes
-        Helm
         ArgoCD
-        Terraform
     end
     
-    subgraph Operate [Operate]
-        direction TB
+    subgraph Operate["Operate"]
         Prometheus
         Grafana
-        ELK[ELK Stack]
-        PagerDuty
     end
     
-    Source_Control --> Build
+    Source --> Build
     Build --> Test
     Test --> Deploy
     Deploy --> Operate
-    
-    style Source_Control fill:#e3f2fd,stroke:#1565c0
-    style Build fill:#fff3e0,stroke:#e65100
-    style Test fill:#e8f5e9,stroke:#2e7d32
-    style Deploy fill:#f3e5f5,stroke:#7b1fa2
-    style Operate fill:#ffebee,stroke:#c62828
 ```
 
 ---

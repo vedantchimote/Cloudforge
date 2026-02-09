@@ -38,44 +38,28 @@ az ad sp create-for-rbac --name "terraform-cloudforge" --role Contributor
 
 ```mermaid
 graph TB
-    subgraph Azure_Cloud [Azure Cloud]
-        direction TB
-        
-        subgraph Resource_Group [Resource Group: cloudforge-rg]
-            direction TB
-            
-            subgraph VNet [Virtual Network]
-                direction TB
-                
-                subgraph AKS_Subnet [AKS Subnet]
-                    AKS[AKS Cluster]
+    subgraph Azure["Azure Cloud"]
+        subgraph RG["Resource Group"]
+            subgraph VNet["Virtual Network"]
+                subgraph AKS_Subnet["AKS Subnet"]
+                    AKS["AKS Cluster"]
                 end
                 
-                subgraph DB_Subnet [Database Subnet]
-                    direction LR
-                    DB[Azure Postgres]
-                    Redis[Azure Redis]
+                subgraph DB_Subnet["Database Subnet"]
+                    DB["Azure Postgres"]
+                    Redis["Azure Redis"]
                 end
             end
             
-            subgraph Ext_Resources [External Resources]
-                direction LR
-                ACR[Azure Container Registry]
-                KV[Key Vault]
-            end
+            ACR["Container Registry"]
+            KV["Key Vault"]
         end
     end
     
-    AKS -- Pull Images --> ACR
-    AKS -- Get Secrets --> KV
-    AKS -- Persist Data --> DB
-    AKS -- Cache --> Redis
-    
-    style Azure_Cloud fill:#f0f9ff,stroke:#0078d4,stroke-width:2px
-    style Resource_Group fill:#e6f2ff,stroke:#005a9e
-    style VNet fill:#cce6ff,stroke:#004578
-    style AKS_Subnet fill:#ffffff,stroke:#0078d4,stroke-dasharray: 5 5
-    style DB_Subnet fill:#ffffff,stroke:#0078d4,stroke-dasharray: 5 5
+    AKS --> ACR
+    AKS --> KV
+    AKS --> DB
+    AKS --> Redis
 ```
 
 ---

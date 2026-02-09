@@ -24,29 +24,25 @@ This guide covers deploying CloudForge to Kubernetes using Minikube (local) and 
 
 ```mermaid
 graph TB
-    subgraph Cluster [Kubernetes Cluster]
-        direction TB
-        Ingress[Ingress Controller<br/>(NGINX / Traefik)]
+    subgraph Cluster["Kubernetes Cluster"]
+        Ingress["Ingress Controller"]
         
-        subgraph NS_App [Namespace: cloudforge]
-            direction LR
-            Frontend[Frontend]
-            User[User Svc]
-            Product[Product Svc]
-            Other[... Other Svcs]
+        subgraph NS_App["Namespace: cloudforge"]
+            Frontend["Frontend"]
+            User["User Svc"]
+            Product["Product Svc"]
+            Other["Other Svcs"]
         end
         
-        subgraph NS_Mon [Namespace: monitoring]
-            direction LR
-            Prom[Prometheus]
-            Graf[Grafana]
-            Loki[Loki]
+        subgraph NS_Mon["Namespace: monitoring"]
+            Prom["Prometheus"]
+            Graf["Grafana"]
+            Loki["Loki"]
         end
         
         Ingress --> NS_App
         Ingress --> NS_Mon
     end
-    style Cluster fill:#f9f9f9,stroke:#333,stroke-width:2px
 ```
 
 ---

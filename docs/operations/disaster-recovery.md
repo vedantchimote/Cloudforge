@@ -116,24 +116,18 @@ helm upgrade cloudforge ./infrastructure/helm/cloudforge \
 
 ```mermaid
 graph LR
-    subgraph Primary [Primary Region (East)]
-        direction TB
-        App1[Application (Active)]
-        DB1[(Database Primary)]
+    subgraph Primary["Primary Region"]
+        App1["Application"]
+        DB1["Database"]
         App1 --> DB1
     end
     
-    subgraph Secondary [Secondary Region (West)]
-        direction TB
-        App2[Application (Standby)]
-        DB2[(Database Replica)]
-        App2 -.-> DB2
+    subgraph Secondary["Secondary Region"]
+        App2["Standby App"]
+        DB2["Database Replica"]
     end
     
-    DB1 -- Async Replication --> DB2
-    
-    style Primary fill:#e6fffa,stroke:#38b2ac
-    style Secondary fill:#edf2f7,stroke:#cbd5e0
+    DB1 --> DB2
 ```
 
 ### Failover Steps

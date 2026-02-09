@@ -32,25 +32,19 @@ https://api.cloudforge.io/v2/users
 ```mermaid
 graph LR
     subgraph Development
-        Alpha[Alpha<br/>(dev)]
-        Beta[Beta<br/>(test)]
+        Alpha["Alpha (dev)"]
+        Beta["Beta (test)"]
     end
     
     subgraph Production
-        Stable[Stable<br/>(prod)]
-        Deprecated[Deprecated<br/>(sunset)]
+        Stable["Stable (prod)"]
+        Deprecated["Deprecated (sunset)"]
     end
     
     Alpha --> Beta
     Beta --> Stable
-    Stable -- "24 months" --> Deprecated
-    Deprecated -- "6 months notice" --> EOL[End of Life]
-    
-    style Alpha fill:#e2e8f0,stroke:#cbd5e0
-    style Beta fill:#fffaf0,stroke:#ed8936
-    style Stable fill:#f0fff4,stroke:#48bb78
-    style Deprecated fill:#fff5f5,stroke:#f56565
-    style EOL fill:#2d3748,stroke:#2d3748,color:#fff
+    Stable --> Deprecated
+    Deprecated --> EOL["End of Life"]
 ```
 
 | Status | Description | Support |

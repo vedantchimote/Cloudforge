@@ -22,45 +22,36 @@ This guide covers deploying CloudForge using Docker and Docker Compose.
 
 ```mermaid
 graph TB
-    subgraph Network [Docker Compose Network]
-        direction TB
-        
-        subgraph Row1 [Frontend]
-            direction LR
-            F[Frontend<br/>:3000]
+    subgraph Network["Docker Compose Network"]
+        subgraph Frontend
+            F["Frontend :3000"]
         end
         
-        subgraph Row2 [Core Services]
-            direction LR
-            US[User<br/>:8081]
-            PS[Product<br/>:8082]
-            OS[Order<br/>:8083]
+        subgraph CoreServices["Core Services"]
+            US["User :8081"]
+            PS["Product :8082"]
+            OS["Order :8083"]
         end
         
-        subgraph Row3 [Support Services & Data]
-             direction LR
-             PY[Payment<br/>:8084]
-             NS[Notif<br/>:8085]
-             PG[Postgres<br/>:5432]
-             MG[MongoDB<br/>:27017]
+        subgraph SupportServices["Support Services"]
+            PY["Payment :8084"]
+            NS["Notification :8085"]
         end
 
-        subgraph Row4 [Infrastructure]
-            direction LR
-            RD[Redis<br/>:6379]
-            KF[Kafka<br/>:9092]
-            LD[LDAP<br/>:389]
-            VT[Vault<br/>:8200]
+        subgraph Data["Databases"]
+            PG["Postgres :5432"]
+            MG["MongoDB :27017"]
+            RD["Redis :6379"]
+        end
+
+        subgraph Infra["Infrastructure"]
+            KF["Kafka :9092"]
         end
         
-        subgraph Row5 [Observability]
-            direction LR
-            PR[Prometheus<br/>:9090]
-            GR[Grafana<br/>:3001]
-            LK[Loki<br/>:3100]
+        subgraph Observability
+            PR["Prometheus :9090"]
+            GR["Grafana :3001"]
         end
-        
-        style Network fill:#f9f9f9,stroke:#333,stroke-width:2px
     end
 ```
 
