@@ -1,3 +1,9 @@
+---
+title: "Docker Guide"
+description: "Deploy CloudForge using Docker and Docker Compose"
+icon: "docker"
+---
+
 # Docker Deployment Guide
 
 This guide covers deploying CloudForge using Docker and Docker Compose.

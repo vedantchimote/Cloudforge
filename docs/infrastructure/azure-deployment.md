@@ -1,3 +1,9 @@
+---
+title: "Azure Deployment"
+description: "Deploy CloudForge to Azure Kubernetes Service (AKS)"
+icon: "cloud"
+---
+
 # Azure AKS Deployment Guide
 
 This guide covers deploying CloudForge to Azure Kubernetes Service (AKS) using Terraform.

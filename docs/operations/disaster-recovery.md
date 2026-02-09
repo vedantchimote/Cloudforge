@@ -1,3 +1,9 @@
+---
+title: "Disaster Recovery"
+description: "Business continuity and disaster recovery procedures"
+icon: "life-ring"
+---
+
 # Disaster Recovery Guide
 
 Business continuity and disaster recovery procedures for CloudForge.

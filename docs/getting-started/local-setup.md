@@ -1,3 +1,9 @@
+---
+title: "Local Setup"
+description: "Set up CloudForge for local development"
+icon: "laptop-code"
+---
+
 # Local Development Setup
 
 This guide walks you through setting up the CloudForge development environment on your local machine.

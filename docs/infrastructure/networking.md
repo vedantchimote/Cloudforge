@@ -1,3 +1,9 @@
+---
+title: "Networking"
+description: "Network architecture and policies for CloudForge"
+icon: "network-wired"
+---
+
 # Networking Guide
 
 Network architecture and policies for CloudForge.

@@ -1,3 +1,9 @@
+---
+title: "Kubernetes Guide"
+description: "Deploy CloudForge to Kubernetes using Minikube and production clusters"
+icon: "dharmachakra"
+---
+
 # Kubernetes Deployment Guide
 
 This guide covers deploying CloudForge to Kubernetes using Minikube (local) and production clusters.

@@ -1,3 +1,9 @@
+---
+title: "Database Schema"
+description: "Database schemas for PostgreSQL and MongoDB"
+icon: "database"
+---
+
 # Database Schema
 
 Database schemas for PostgreSQL and MongoDB used in CloudForge.

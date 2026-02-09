@@ -1,3 +1,9 @@
+---
+title: "API Reference"
+description: "Complete REST API documentation for CloudForge microservices"
+icon: "book"
+---
+
 # API Reference
 
 Complete REST API documentation for all CloudForge microservices.

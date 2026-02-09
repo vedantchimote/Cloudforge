@@ -1,7 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "CloudForge",
-  "comment": "Force rebuild 2026-02-09",
   "logo": {
     "light": "/logo/light.png",
     "dark": "/logo/dark.png"

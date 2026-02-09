@@ -1,3 +1,9 @@
+---
+title: "DevOps Toolchain"
+description: "Complete DevOps toolchain reference for CloudForge"
+icon: "screwdriver-wrench"
+---
+
 # 🛠️ Complete DevOps Toolchain Reference
 
 > A comprehensive guide to DevOps tools for building production-grade infrastructure and CI/CD pipelines.
