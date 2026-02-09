@@ -6,14 +6,16 @@ Comprehensive testing approach for CloudForge.
 
 ## 🧪 Testing Pyramid
 
-```
-          ┌─────────────┐
-         /   E2E Tests   \        ← Fewer, slower, expensive
-        /─────────────────\
-       /  Integration Tests\      ← More, faster
-      /─────────────────────\
-     /      Unit Tests       \    ← Many, very fast
-    └─────────────────────────┘
+```mermaid
+graph BT
+    subgraph Testing_Pyramid [Testing Pyramid]
+        Unit[Unit Tests<br/>(Many, very fast)] --> Integration[Integration Tests<br/>(More, faster)]
+        Integration --> E2E[E2E Tests<br/>(Fewer, slower, expensive)]
+        
+        style Unit fill:#e1f5fe,stroke:#01579b
+        style Integration fill:#fff9c4,stroke:#fbc02d
+        style E2E fill:#ffccbc,stroke:#bf360c
+    end
 ```
 
 | Level | Target Coverage | Tools |
