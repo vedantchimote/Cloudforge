@@ -6,35 +6,45 @@ Network architecture and policies for CloudForge.
 
 ## 🌐 Network Architecture
 
-```
-                    Internet
-                       │
-                ┌──────▼──────┐
-                │   Azure LB   │
-                └──────┬──────┘
-                       │
-                ┌──────▼──────┐
-                │   Ingress    │
-                │  Controller  │
-                └──────┬──────┘
-                       │
-    ┌──────────────────┼──────────────────┐
-    │           cloudforge VNet            │
-    │                                      │
-    │  ┌────────────────────────────────┐ │
-    │  │        AKS Subnet               │ │
-    │  │  ┌────────┐ ┌────────┐        │ │
-    │  │  │Services│ │Services│        │ │
-    │  │  └────────┘ └────────┘        │ │
-    │  └────────────────────────────────┘ │
-    │                                      │
-    │  ┌────────────────────────────────┐ │
-    │  │      Database Subnet            │ │
-    │  │  ┌────────┐ ┌────────┐        │ │
-    │  │  │Postgres│ │  Redis │        │ │
-    │  │  └────────┘ └────────┘        │ │
-    │  └────────────────────────────────┘ │
-    └──────────────────────────────────────┘
+```mermaid
+graph TB
+    Internet((Internet))
+    
+    subgraph Azure_Infrastructure [Azure Infrastructure]
+        direction TB
+        
+        LB[Azure Load Balancer]
+        
+        subgraph Ingress_Layer [Ingress Layer]
+            IC[Ingress Controller]
+        end
+        
+        subgraph VNet [CloudForge VNet]
+            direction TB
+            
+            subgraph AKS_Subnet [AKS Subnet]
+                direction LR
+                S1[Service A]
+                S2[Service B]
+            end
+            
+            subgraph DB_Subnet [Database Subnet]
+                direction LR
+                PG[(PostgreSQL)]
+                RD[(Redis)]
+            end
+        end
+    end
+    
+    Internet --> LB
+    LB --> IC
+    IC --> AKS_Subnet
+    AKS_Subnet --> DB_Subnet
+    
+    style Azure_Infrastructure fill:#f0f9ff,stroke:#0078d4
+    style VNet fill:#e6f2ff,stroke:#005a9e
+    style AKS_Subnet fill:#ffffff,stroke:#0078d4,stroke-dasharray: 5 5
+    style DB_Subnet fill:#ffffff,stroke:#0078d4,stroke-dasharray: 5 5
 ```
 
 ---
