@@ -1,3 +1,9 @@
+---
+title: "Performance Tuning"
+description: "Optimization strategies for CloudForge"
+icon: "gauge-high"
+---
+
 # Performance Tuning Guide
 
 Optimization strategies for CloudForge.

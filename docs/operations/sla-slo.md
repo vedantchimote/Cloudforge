@@ -1,3 +1,9 @@
+---
+title: "SLA & SLO"
+description: "Reliability targets and Service Level Objectives"
+icon: "chart-simple"
+---
+
 # Service Level Objectives (SLOs)
 
 Reliability targets and SLIs for CloudForge.

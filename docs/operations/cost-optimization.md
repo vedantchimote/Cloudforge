@@ -1,3 +1,9 @@
+---
+title: "Cost Optimization"
+description: "Managing cloud costs for CloudForge"
+icon: "money-bill-wave"
+---
+
 # Cost Optimization Guide
 
 Managing cloud costs for CloudForge.
