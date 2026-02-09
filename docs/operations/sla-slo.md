@@ -1,5 +1,5 @@
 ---
-title: "SLA & SLO"
+title: "SLA and SLO"
 description: "Reliability targets and Service Level Objectives"
 icon: "chart-simple"
 ---
