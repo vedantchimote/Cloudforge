@@ -108,11 +108,26 @@ helm upgrade cloudforge ./infrastructure/helm/cloudforge \
 
 ### Active-Passive Setup
 
-```
-┌─────────────────┐         ┌─────────────────┐
-│  Primary (East) │◄───────►│ Secondary (West)│
-│     (Active)    │  Async  │   (Standby)     │
-└─────────────────┘  Repl   └─────────────────┘
+```mermaid
+graph LR
+    subgraph Primary [Primary Region (East)]
+        direction TB
+        App1[Application (Active)]
+        DB1[(Database Primary)]
+        App1 --> DB1
+    end
+    
+    subgraph Secondary [Secondary Region (West)]
+        direction TB
+        App2[Application (Standby)]
+        DB2[(Database Replica)]
+        App2 -.-> DB2
+    end
+    
+    DB1 -- Async Replication --> DB2
+    
+    style Primary fill:#e6fffa,stroke:#38b2ac
+    style Secondary fill:#edf2f7,stroke:#cbd5e0
 ```
 
 ### Failover Steps
