@@ -76,7 +76,8 @@ A production-grade **5-microservice e-commerce platform** demonstrating enterpri
 git clone https://github.com/yourusername/cloudforge.git
 cd cloudforge
 
-# Start all services
+# Start all services (from infrastructure/docker directory)
+cd infrastructure/docker
 docker-compose up -d
 
 # View logs
@@ -85,7 +86,8 @@ docker-compose logs -f
 # Access the application
 # Frontend: http://localhost:3000
 # API Gateway: http://localhost:8080
-# Grafana: http://localhost:3001
+# Eureka Dashboard: http://localhost:8761
+# Kafka UI: http://localhost:8091
 ```
 
 ### Run Individual Services

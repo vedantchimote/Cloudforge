@@ -324,6 +324,26 @@ services:
     networks:
       - cloudforge-net
 
+  # Frontend (React + Nginx)
+  frontend:
+    build:
+      context: ../../frontend
+      dockerfile: Dockerfile
+    container_name: cloudforge-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - cloudforge-net
+
 networks:
   cloudforge-net:
     driver: bridge
