@@ -1,0 +1,58 @@
+name: Docker Build CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'services/**'
+      - 'frontend/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'services/**'
+      - 'frontend/**'
+
+jobs:
+  build-backend-images:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [
+          api-gateway,
+          discovery-server,
+          notification-service,
+          order-service,
+          payment-service,
+          product-service,
+          swagger-aggregator,
+          user-service
+        ]
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build ${{ matrix.service }} Image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./services/${{ matrix.service }}
+        file: ./services/${{ matrix.service }}/Dockerfile
+        push: false
+        tags: cloudforge/${{ matrix.service }}:latest
+
+  build-frontend-image:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Frontend Image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./frontend
+        file: ./frontend/Dockerfile
+        push: false
+        tags: cloudforge/frontend:latest

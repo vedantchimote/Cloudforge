@@ -1,0 +1,41 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'services/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'services/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [
+          api-gateway,
+          discovery-server,
+          notification-service,
+          order-service,
+          payment-service,
+          product-service,
+          swagger-aggregator,
+          user-service
+        ]
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build and Test ${{ matrix.service }}
+      run: |
+        cd services/${{ matrix.service }}
+        mvn -B verify

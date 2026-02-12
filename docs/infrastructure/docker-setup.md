@@ -32,6 +32,18 @@ The `docker-compose.yml` defines the following services:
 - **Port**: 389, 636
 - **Purpose**: Directory service for enterprise authentication.
 
+### 5. Order Service (`order-service`)
+- **Port**: 8083
+- **Purpose**: Order management and processing.
+
+### 6. Payment Service (`payment-service`)
+- **Port**: 8084
+- **Purpose**: Payment processing with Razorpay integration.
+
+### 7. Notification Service (`notification-service`)
+- **Port**: 8085
+- **Purpose**: Multi-channel notifications (Email, SMS).
+
 ## Commands
 
 ### Start All Services

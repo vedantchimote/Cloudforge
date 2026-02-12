@@ -226,6 +226,50 @@ Content-Type: application/json
 
 ---
 
+## 🔔 Notification Service (Port 8085)
+
+### Send Notification
+```http
+POST /api/notifications
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "userId": "uuid",
+  "type": "ORDER_CONFIRMATION",
+  "channel": "EMAIL",
+  "recipient": "user@example.com",
+  "subject": "Order Confirmed",
+  "content": "Your order #123 has been placed."
+}
+```
+
+### Get Notification
+```http
+GET /api/notifications/{id}
+Authorization: Bearer <token>
+```
+
+### Get User Notifications
+```http
+GET /api/notifications/user/{userId}?page=0&size=10
+Authorization: Bearer <token>
+```
+
+### Get User Notifications by Type
+```http
+GET /api/notifications/user/{userId}/type/{type}
+Authorization: Bearer <token>
+```
+
+### Send Welcome Email (Test)
+```http
+POST /api/notifications/welcome?userId={uuid}&email={email}&name={name}
+Authorization: Bearer <token>
+```
+
+---
+
 ## ❌ Error Responses
 
 All errors follow this format:
