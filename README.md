@@ -61,6 +61,8 @@ A production-grade **5-microservice e-commerce platform** demonstrating enterpri
 
 ## 🚀 Quick Start
 
+> **For detailed instructions, see the [Comprehensive Run Guide](docs/running-the-application.md).**
+
 ### Prerequisites
 - Docker Desktop
 - Java 17+
@@ -131,6 +133,7 @@ cloudforge/
 
 | Document | Description |
 |----------|-------------|
+| [Run Guide](docs/running-the-application.md) | **Step-by-step guide to run full app** |
 | [Local Setup](docs/local-setup.md) | Development environment setup |
 | [Docker Guide](docs/docker-guide.md) | Docker Compose deployment |
 | [Kubernetes Guide](docs/kubernetes-guide.md) | K8s/Minikube deployment |
