@@ -15,11 +15,11 @@ public class ApiDocsProxyController {
     private final RestTemplate restTemplate = new RestTemplate();
 
     private static final Map<String, String> SERVICE_URLS = Map.of(
-            "user-service", "http://localhost:8081",
-            "product-service", "http://localhost:8082",
-            "order-service", "http://localhost:8083",
-            "payment-service", "http://localhost:8084",
-            "notification-service", "http://localhost:8085");
+            "user-service", "http://user-service:8081",
+            "product-service", "http://product-service:8082",
+            "order-service", "http://order-service:8083",
+            "payment-service", "http://payment-service:8084",
+            "notification-service", "http://notification-service:8085");
 
     @GetMapping(value = "/api-docs/{serviceName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> proxyApiDocs(@PathVariable String serviceName) {
