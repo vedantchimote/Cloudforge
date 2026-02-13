@@ -208,17 +208,27 @@ erDiagram
 
 ## Caching Strategy
 
-Redis caching is implemented at the service layer:
+Redis caching is implemented at the service layer with Jackson configuration for proper serialization:
+
+### RedisConfig
+The service includes a `RedisConfig` class that configures Jackson's `ObjectMapper` with `JavaTimeModule` to properly serialize/deserialize `LocalDateTime` fields.
+
+### Cached Methods
 
 ```java
-@Cacheable(value = "products", key = "#pageable.pageNumber + '-' + #pageable.pageSize")
-public Page<ProductDTO> getAllProducts(Pageable pageable)
-
 @Cacheable(value = "product", key = "#id")
 public ProductDTO getProductById(String id)
+
+@Cacheable(value = "latestProducts")
+public List<ProductDTO> getLatestProducts()
 
 @CacheEvict(value = {"products", "product", "latestProducts"}, allEntries = true)
 public ProductDTO createProduct(ProductDTO productDTO)
 ```
 
-All write operations (`create`, `update`, `delete`, `updateStock`) evict relevant caches to maintain consistency.
+### Important Notes
+
+- **Paginated results are NOT cached**: Methods returning `Page<ProductDTO>` (like `getAllProducts`, `getProductsByCategory`, `searchProducts`) do not use caching due to Redis serialization limitations with Spring Data's `Page` interface.
+- **Individual products ARE cached**: Single product lookups by ID are cached for performance.
+- **Latest products ARE cached**: The list of 10 most recent products is cached.
+- All write operations (`create`, `update`, `delete`, `updateStock`) evict relevant caches to maintain consistency.

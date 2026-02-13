@@ -180,6 +180,23 @@ You should see all services registered:
 
 ## Using the Application 🎮
 
+### Sample Data
+
+The application comes pre-seeded with **10 sample products** in the MongoDB database:
+
+- Wireless Bluetooth Headphones
+- Smart Watch Series 5
+- Laptop Backpack
+- Mechanical Gaming Keyboard
+- Wireless Mouse
+- USB-C Hub Adapter
+- Portable SSD 1TB
+- Webcam HD 1080p
+- Phone Stand Holder
+- Wireless Charger Pad
+
+These products are automatically loaded when you first start the containers, so you can immediately browse and test the product catalog.
+
 ### 1. Register a New User
 
 1. Go to http://localhost:3000
@@ -187,11 +204,16 @@ You should see all services registered:
 3. Fill in the registration form
 4. Submit
 
+**Or use pre-configured LDAP users:**
+- Username: `john.doe`, `rajesh.kumar`, `priya.sharma`, etc.
+- Password: `Password123!`
+
 ### 2. Browse Products
 
 1. Navigate to "Products" or search
 2. View product details
 3. Add items to cart
+4. Filter by category (Electronics, Accessories)
 
 ### 3. Place an Order
 

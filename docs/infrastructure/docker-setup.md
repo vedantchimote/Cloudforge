@@ -214,6 +214,8 @@ MAIL_PASSWORD=your_app_password
 - **Image**: mongo:7
 - **Database**: products
 - **Credentials**: root / mongo123
+- **Sample Data**: Pre-seeded with 10 sample products (electronics and accessories)
+- **Seeding Script**: `infrastructure/docker/seed-products.js` (runs on first startup)
 
 #### Redis (Port 6379)
 - **Image**: redis:7-alpine
