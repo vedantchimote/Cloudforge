@@ -88,6 +88,7 @@ docker-compose logs -f
 # API Gateway: http://localhost:8080
 # Eureka Dashboard: http://localhost:8761
 # Kafka UI: http://localhost:8091
+# MailHog (Email Testing): http://localhost:8025
 ```
 
 ### Run Individual Services

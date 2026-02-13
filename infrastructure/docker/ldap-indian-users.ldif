@@ -1,0 +1,151 @@
+# Indian Users for CloudForge LDAP
+
+dn: uid=rajesh.kumar,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: rajesh.kumar
+cn: Rajesh Kumar
+sn: Kumar
+givenName: Rajesh
+mail: rajesh.kumar@cloudforge.io
+userPassword: Password123!
+uidNumber: 10006
+gidNumber: 10006
+homeDirectory: /home/rajesh.kumar
+loginShell: /bin/bash
+
+dn: uid=priya.sharma,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: priya.sharma
+cn: Priya Sharma
+sn: Sharma
+givenName: Priya
+mail: priya.sharma@cloudforge.io
+userPassword: Password123!
+uidNumber: 10007
+gidNumber: 10007
+homeDirectory: /home/priya.sharma
+loginShell: /bin/bash
+
+dn: uid=amit.patel,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: amit.patel
+cn: Amit Patel
+sn: Patel
+givenName: Amit
+mail: amit.patel@cloudforge.io
+userPassword: Password123!
+uidNumber: 10008
+gidNumber: 10008
+homeDirectory: /home/amit.patel
+loginShell: /bin/bash
+
+dn: uid=sneha.reddy,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: sneha.reddy
+cn: Sneha Reddy
+sn: Reddy
+givenName: Sneha
+mail: sneha.reddy@cloudforge.io
+userPassword: Password123!
+uidNumber: 10009
+gidNumber: 10009
+homeDirectory: /home/sneha.reddy
+loginShell: /bin/bash
+
+dn: uid=vikram.singh,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: vikram.singh
+cn: Vikram Singh
+sn: Singh
+givenName: Vikram
+mail: vikram.singh@cloudforge.io
+userPassword: Password123!
+uidNumber: 10010
+gidNumber: 10010
+homeDirectory: /home/vikram.singh
+loginShell: /bin/bash
+
+dn: uid=ananya.iyer,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: ananya.iyer
+cn: Ananya Iyer
+sn: Iyer
+givenName: Ananya
+mail: ananya.iyer@cloudforge.io
+userPassword: Password123!
+uidNumber: 10011
+gidNumber: 10011
+homeDirectory: /home/ananya.iyer
+loginShell: /bin/bash
+
+dn: uid=arjun.mehta,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: arjun.mehta
+cn: Arjun Mehta
+sn: Mehta
+givenName: Arjun
+mail: arjun.mehta@cloudforge.io
+userPassword: Password123!
+uidNumber: 10012
+gidNumber: 10012
+homeDirectory: /home/arjun.mehta
+loginShell: /bin/bash
+
+dn: uid=kavya.nair,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: kavya.nair
+cn: Kavya Nair
+sn: Nair
+givenName: Kavya
+mail: kavya.nair@cloudforge.io
+userPassword: Password123!
+uidNumber: 10013
+gidNumber: 10013
+homeDirectory: /home/kavya.nair
+loginShell: /bin/bash
+
+dn: uid=rohan.gupta,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: rohan.gupta
+cn: Rohan Gupta
+sn: Gupta
+givenName: Rohan
+mail: rohan.gupta@cloudforge.io
+userPassword: Password123!
+uidNumber: 10014
+gidNumber: 10014
+homeDirectory: /home/rohan.gupta
+loginShell: /bin/bash
+
+dn: uid=ishita.desai,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: ishita.desai
+cn: Ishita Desai
+sn: Desai
+givenName: Ishita
+mail: ishita.desai@cloudforge.io
+userPassword: Password123!
+uidNumber: 10015
+gidNumber: 10015
+homeDirectory: /home/ishita.desai
+loginShell: /bin/bash

@@ -14,7 +14,7 @@ Before you begin, ensure you have the following installed:
 
 ## Quick Start (Recommended) 🎯
 
-The **easiest way** to run CloudForge is using Docker Compose, which starts all 16 containers including the frontend.
+The **easiest way** to run CloudForge is using Docker Compose, which starts all 17 containers including the frontend.
 
 ### 1. Start All Services
 
@@ -48,11 +48,12 @@ That's it! The complete application is now running.
 | **Eureka Discovery** | `http://localhost:8761` | Service registry dashboard (eureka/eureka123) |
 | **Kafka UI** | `http://localhost:8091` | Kafka topics and messages viewer |
 | **LDAP Admin** | `http://localhost:8090` | LDAP management interface |
+| **MailHog (Email Testing)** | `http://localhost:8025` | View test emails sent by notification service |
 | **User Service** | `http://localhost:8081` | User management API + Swagger |
 | **Product Service** | `http://localhost:8082` | Product catalog API + Swagger |
 | **Order Service** | `http://localhost:8083` | Order processing API + Swagger |
 | **Payment Service** | `http://localhost:8084` | Payment processing API + Swagger |
-| **Notification Service** | `http://localhost:8085` | Notification API |
+| **Notification Service** | `http://localhost:8085` | Notification API + Swagger |
 
 ---
 
@@ -72,7 +73,7 @@ docker-compose ps
 docker inspect cloudforge-frontend --format='{{.State.Health.Status}}'
 ```
 
-You should see **16 containers** running:
+You should see **17 containers** running:
 
 **Application Services (8):**
 - cloudforge-frontend
@@ -84,7 +85,7 @@ You should see **16 containers** running:
 - cloudforge-payment-service
 - cloudforge-notification-service
 
-**Infrastructure Services (8):**
+**Infrastructure Services (9):**
 - cloudforge-postgres
 - cloudforge-mongodb
 - cloudforge-redis
@@ -93,6 +94,7 @@ You should see **16 containers** running:
 - cloudforge-kafka-ui
 - cloudforge-ldap
 - cloudforge-ldapadmin
+- cloudforge-mailhog
 
 ---
 
@@ -244,6 +246,48 @@ make test
 
 # Clean up (remove volumes)
 make clean
+```
+
+---
+
+## Email Testing with MailHog 📧
+
+CloudForge includes MailHog for testing email functionality in development without needing real email credentials.
+
+### Access MailHog
+
+**Web UI**: [http://localhost:8025](http://localhost:8025)
+
+### Send Test Emails
+
+```bash
+# Send a welcome email
+curl -X POST "http://localhost:8085/api/notifications/welcome?userId=550e8400-e29b-41d4-a716-446655440001&email=test@example.com&name=Test User"
+
+# Open MailHog UI
+make mailhog
+```
+
+### Features
+
+- **View all emails** sent by the notification service
+- **No configuration** required - works out of the box
+- **HTML preview** - see exactly what users receive
+- **Search and filter** - find specific emails
+- **API access** - automate email testing
+
+### Email Types You Can Test
+
+- Welcome emails (new user registration)
+- Order confirmations
+- Payment confirmations
+- Payment failure notifications
+
+### Clear Emails
+
+```bash
+# Restart MailHog to clear all emails
+docker restart cloudforge-mailhog
 ```
 
 ---

@@ -21,6 +21,7 @@ help:
 	@echo "  test           Run health checks on all services"
 	@echo "  ps             Show running containers"
 	@echo "  stats          Show container resource usage"
+	@echo "  mailhog        Open MailHog email testing UI"
 
 # Build targets
 build:
@@ -103,3 +104,8 @@ db-mongo:
 
 db-redis:
 	docker exec -it cloudforge-redis redis-cli -a redis123
+
+# Email testing
+mailhog:
+	@echo "Opening MailHog UI at http://localhost:8025"
+	@start http://localhost:8025 || open http://localhost:8025 || xdg-open http://localhost:8025

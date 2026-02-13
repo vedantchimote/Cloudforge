@@ -8,7 +8,7 @@ import { authService } from '@/services/authService';
 import { useAuthStore } from '@/store/authStore';
 
 const loginSchema = z.object({
-    email: z.string().email('Please enter a valid email'),
+    username: z.string().min(1, 'Please enter your username'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
@@ -52,7 +52,7 @@ export default function LoginPage() {
             setAuth(response.token, response.user);
             navigate(redirect);
         } catch {
-            setError('Invalid email or password');
+            setError('Invalid username or password');
         } finally {
             setIsLoading(false);
         }
@@ -100,16 +100,16 @@ export default function LoginPage() {
                             <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
                                 <div>
                                     <label className="block text-sm font-bold text-gray-900 mb-1">
-                                        Email
+                                        Username
                                     </label>
                                     <input
-                                        type="email"
-                                        {...loginForm.register('email')}
+                                        type="text"
+                                        {...loginForm.register('username')}
                                         className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#FF9900] focus:border-[#FF9900]"
                                     />
-                                    {loginForm.formState.errors.email && (
+                                    {loginForm.formState.errors.username && (
                                         <p className="text-red-600 text-xs mt-1">
-                                            {loginForm.formState.errors.email.message}
+                                            {loginForm.formState.errors.username.message}
                                         </p>
                                     )}
                                 </div>

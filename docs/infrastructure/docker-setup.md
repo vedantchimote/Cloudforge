@@ -10,10 +10,10 @@ CloudForge is fully containerized with Docker, including all microservices, fron
 
 ## 🎯 Overview
 
-The CloudForge Docker setup includes **16 containers**:
+The CloudForge Docker setup includes **17 containers**:
 
 - **8 Application Services**: Frontend, API Gateway, Discovery Server, and 5 microservices
-- **8 Infrastructure Services**: PostgreSQL, MongoDB, Redis, Kafka, Zookeeper, OpenLDAP, and management UIs
+- **9 Infrastructure Services**: PostgreSQL, MongoDB, Redis, Kafka, Zookeeper, OpenLDAP, MailHog, and management UIs
 
 ## 🚀 Quick Start
 
@@ -45,6 +45,7 @@ docker-compose logs -f
 | **Eureka Dashboard** | http://localhost:8761 | eureka / eureka123 |
 | **Kafka UI** | http://localhost:8091 | - |
 | **LDAP Admin** | http://localhost:8090 | cn=admin,dc=cloudforge,dc=io / admin123 |
+| **MailHog (Email Testing)** | http://localhost:8025 | - |
 
 ## 📦 Container Architecture
 
@@ -196,8 +197,11 @@ MAIL_PASSWORD=your_app_password
 
 #### Notification Service (Port 8085)
 - **Database**: PostgreSQL
-- **Features**: Email/SMS, Kafka consumer
-- **Note**: May show unhealthy without email config (expected)
+- **Messaging**: Kafka consumer
+- **Features**: Email/SMS notifications, Thymeleaf templates
+- **Email**: Configured with MailHog for development testing
+- **Swagger**: http://localhost:8085/swagger-ui.html
+- **Test Endpoint**: `POST /api/notifications/welcome` for testing emails
 
 ### Infrastructure Services
 
@@ -226,6 +230,18 @@ MAIL_PASSWORD=your_app_password
 - **Domain**: cloudforge.io
 - **Admin**: cn=admin,dc=cloudforge,dc=io / admin123
 
+#### MailHog (Ports 1025, 8025)
+- **Image**: mailhog/mailhog:latest
+- **SMTP Port**: 1025 (for sending emails)
+- **Web UI**: http://localhost:8025 (for viewing emails)
+- **Purpose**: Email testing in development
+- **Features**: 
+  - Captures all outgoing emails
+  - No authentication required
+  - Web interface to view emails
+  - API for automated testing
+- **Usage**: All emails sent by the notification service are captured here
+
 ## 🧪 Testing
 
 ### Health Checks
@@ -243,6 +259,37 @@ curl http://localhost:8081/actuator/health
 # All services
 make test  # Using Makefile
 ```
+
+### Email Testing with MailHog
+
+MailHog captures all emails sent by the notification service for testing:
+
+```bash
+# Send a test welcome email
+curl -X POST "http://localhost:8085/api/notifications/welcome?userId=550e8400-e29b-41d4-a716-446655440001&email=test@example.com&name=Test User"
+
+# View emails in browser
+open http://localhost:8025
+
+# Check emails via API
+curl http://localhost:8025/api/v2/messages
+
+# Using Makefile
+make mailhog  # Opens MailHog UI
+```
+
+**MailHog Features:**
+- View all sent emails in real-time
+- No configuration or credentials needed
+- HTML and plain text email viewing
+- Search and filter emails
+- Delete emails or restart container to clear
+
+**Test Email Types:**
+- Welcome emails (new user registration)
+- Order confirmations
+- Payment confirmations
+- Payment failure notifications
 
 ### View Logs
 

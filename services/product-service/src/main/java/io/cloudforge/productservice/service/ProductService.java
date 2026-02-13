@@ -21,7 +21,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    @Cacheable(value = "products", key = "#pageable.pageNumber + '-' + #pageable.pageSize")
+    // Note: Page objects cannot be cached in Redis due to serialization issues
+    // Caching disabled for paginated results to avoid ClassCastException
     public Page<ProductDTO> getAllProducts(Pageable pageable) {
         return productRepository.findByActiveTrue(pageable)
                 .map(ProductDTO::fromEntity);
@@ -34,11 +35,13 @@ public class ProductService {
         return ProductDTO.fromEntity(product);
     }
 
+    // Note: Page objects cannot be cached in Redis due to serialization issues
     public Page<ProductDTO> getProductsByCategory(String category, Pageable pageable) {
         return productRepository.findByCategoryAndActiveTrue(category, pageable)
                 .map(ProductDTO::fromEntity);
     }
 
+    // Note: Page objects cannot be cached in Redis due to serialization issues
     public Page<ProductDTO> searchProducts(String query, Pageable pageable) {
         return productRepository.searchByText(query, pageable)
                 .map(ProductDTO::fromEntity);

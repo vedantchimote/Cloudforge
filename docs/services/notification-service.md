@@ -15,7 +15,7 @@ The Notification Service handles multi-channel notifications (Email, SMS, Push) 
     Uses `cloudforge_notifications` database
   </Card>
   <Card title="SMTP" icon="envelope">
-    Email via JavaMail + Thymeleaf
+    Email via JavaMail + MailHog (dev)
   </Card>
   <Card title="Kafka" icon="tower-broadcast">
     Event-driven notifications
@@ -176,21 +176,46 @@ erDiagram
 
 ## Configuration
 
+### Development (with MailHog)
+
 ```yaml
 server:
   port: 8085
 
 spring:
   mail:
-    host: smtp.gmail.com
+    host: mailhog  # MailHog container for development
+    port: 1025     # MailHog SMTP port
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+notification:
+  from-email: noreply@cloudforge.io
+  from-name: CloudForge
+  retry-attempts: 3
+```
+
+**View test emails**: http://localhost:8025
+
+### Production
+
+```yaml
+spring:
+  mail:
+    host: smtp.gmail.com  # or SendGrid, AWS SES
     port: 587
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
-
-notification:
-  from-email: noreply@cloudforgetech.in
-  from-name: CloudForge
-  retry-attempts: 3
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 ```
 
 ## Development
@@ -201,4 +226,10 @@ mvn spring-boot:run
 
 # Swagger UI
 http://localhost:8085/swagger-ui.html
+
+# Test email endpoint
+curl -X POST "http://localhost:8085/api/notifications/welcome?userId=550e8400-e29b-41d4-a716-446655440001&email=test@example.com&name=Test User"
+
+# View emails in MailHog
+open http://localhost:8025
 ```

@@ -190,6 +190,16 @@ services:
     networks:
       - cloudforge-net
 
+  # MailHog for email testing
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: cloudforge-mailhog
+    ports:
+      - "1025:1025"  # SMTP server
+      - "8025:8025"  # Web UI
+    networks:
+      - cloudforge-net
+
   # User Service
   user-service:
     build:
@@ -202,6 +212,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: cloudforge123
       SPRING_LDAP_URLS: ldap://openldap:389
       SPRING_LDAP_BASE: dc=cloudforge,dc=io
+      SPRING_LDAP_USERNAME: cn=admin,dc=cloudforge,dc=io
+      SPRING_LDAP_PASSWORD: admin123
       JWT_SECRET: cloudforge-super-secret-key-for-jwt-token-generation-min-256-bits
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
     ports:
@@ -226,6 +238,7 @@ services:
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
       SPRING_DATA_REDIS_PASSWORD: redis123
+      SPRING_CACHE_TYPE: none
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
     ports:
       - "8082:8082"
@@ -307,11 +320,14 @@ services:
       SPRING_DATASOURCE_USERNAME: cloudforge
       SPRING_DATASOURCE_PASSWORD: cloudforge123
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
-      MAIL_PORT: ${MAIL_PORT:-587}
-      MAIL_USERNAME: ${MAIL_USERNAME:-noreply@cloudforgetech.in}
+      MAIL_HOST: ${MAIL_HOST:-mailhog}
+      MAIL_PORT: ${MAIL_PORT:-1025}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
       MAIL_PASSWORD: ${MAIL_PASSWORD:-}
-      NOTIFICATION_FROM_EMAIL: ${NOTIFICATION_FROM_EMAIL:-noreply@cloudforgetech.in}
+      MAIL_SMTP_AUTH: ${MAIL_SMTP_AUTH:-false}
+      MAIL_SMTP_STARTTLS_ENABLE: ${MAIL_SMTP_STARTTLS_ENABLE:-false}
+      MAIL_SMTP_STARTTLS_REQUIRED: ${MAIL_SMTP_STARTTLS_REQUIRED:-false}
+      NOTIFICATION_FROM_EMAIL: ${NOTIFICATION_FROM_EMAIL:-noreply@cloudforge.io}
       NOTIFICATION_FROM_NAME: ${NOTIFICATION_FROM_NAME:-CloudForge}
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
     ports:
@@ -321,6 +337,8 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
+      mailhog:
+        condition: service_started
     networks:
       - cloudforge-net
 

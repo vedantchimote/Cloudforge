@@ -1,189 +1,110 @@
 # Notification Service Status Report
 
 **Date**: February 12, 2026  
-**Status**: ⚠️ Running but Unhealthy (Expected in Development)
+**Status**: ✅ Healthy with MailHog Mock SMTP Server
 
 ---
 
-## 🔍 Issue Summary
+## 🎉 Issue Resolved
 
-The Notification Service is **running** but showing as **unhealthy** due to email configuration.
+The Notification Service is now **running and healthy** with MailHog configured as a mock SMTP server for development.
 
-### Root Cause
+### Solution Implemented
 
-The service health check includes a **Mail Health Indicator** that attempts to connect to Gmail SMTP:
-
-```
-jakarta.mail.AuthenticationFailedException: 535-5.7.8 Username and Password not accepted.
-```
-
-This is happening because:
-1. No valid Gmail credentials are configured
-2. The default environment variables use placeholder values
-3. Gmail requires app-specific passwords (not regular passwords)
+Added **MailHog** - a lightweight SMTP testing tool that:
+1. Captures all outgoing emails
+2. Provides a web UI to view sent emails
+3. Requires no authentication
+4. Perfect for development and testing
 
 ---
 
-## ✅ Service Status
+## ✅ Current Configuration
 
-Despite the health check failure, the notification service is:
-
-- ✅ **Running** - Container is up and operational
-- ✅ **Connected to Kafka** - Can consume events
-- ✅ **Connected to PostgreSQL** - Database connection working
-- ✅ **Registered with Eureka** - Service discovery working
-- ⚠️ **Mail Health Check Failing** - Cannot connect to SMTP server
-
----
-
-## 🔧 Why This Happens
-
-The Spring Boot Actuator health endpoint checks **all** configured health indicators:
-- Database connectivity ✅
-- Kafka connectivity ✅
-- **Mail server connectivity** ❌ (causes overall health to be DOWN)
-
-The mail health check fails because the docker-compose.yml uses default/placeholder values:
+The notification service now uses MailHog:
 
 ```yaml
-MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
-MAIL_PORT: ${MAIL_PORT:-587}
-MAIL_USERNAME: ${MAIL_USERNAME:-noreply@cloudforgetech.in}
-MAIL_PASSWORD: ${MAIL_PASSWORD:-}  # Empty password
-```
-
----
-
-## 💡 Impact on Application
-
-### What Still Works:
-- ✅ Service can receive Kafka events
-- ✅ Service can process notifications
-- ✅ Service can store notification records in database
-- ✅ All other microservices can communicate with it
-
-### What Doesn't Work:
-- ❌ Actual email sending (will fail when attempted)
-- ❌ Health check endpoint returns 503
-
----
-
-## 🛠️ Solutions
-
-### Option 1: Configure Real Email Credentials (Production)
-
-Create a `.env` file in `infrastructure/docker/`:
-
-```env
-# Gmail Configuration (requires App Password)
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-app-specific-password
-NOTIFICATION_FROM_EMAIL=noreply@yourcompany.com
-NOTIFICATION_FROM_NAME=CloudForge
-```
-
-Then restart the service:
-```bash
-cd infrastructure/docker
-docker-compose restart notification-service
-```
-
-#### How to Get Gmail App Password:
-1. Go to Google Account settings
-2. Enable 2-Factor Authentication
-3. Go to Security → App Passwords
-4. Generate a new app password for "Mail"
-5. Use that 16-character password in MAIL_PASSWORD
-
-### Option 2: Disable Mail Health Check (Development)
-
-Modify the notification service configuration to exclude mail from health checks.
-
-Add to `services/notification-service/src/main/resources/application.yml`:
-
-```yaml
-management:
-  health:
-    mail:
-      enabled: false
-```
-
-### Option 3: Use Mock Mail Server (Development)
-
-Use a mock SMTP server like MailHog or FakeSMTP:
-
-```yaml
-# Add to docker-compose.yml
-mailhog:
-  image: mailhog/mailhog:latest
-  container_name: cloudforge-mailhog
-  ports:
-    - "1025:1025"  # SMTP
-    - "8025:8025"  # Web UI
-  networks:
-    - cloudforge-net
-
-# Update notification-service environment
 notification-service:
   environment:
     MAIL_HOST: mailhog
     MAIL_PORT: 1025
     MAIL_USERNAME: ""
     MAIL_PASSWORD: ""
-```
-
-Then access MailHog UI at http://localhost:8025 to see sent emails.
-
-### Option 4: Accept as Development Limitation
-
-For local development without email functionality, you can:
-- Ignore the unhealthy status
-- The service will still process events and log them
-- Emails won't be sent, but the application continues working
-
----
-
-## 📊 Current Configuration
-
-From `docker-compose.yml`:
-
-```yaml
-notification-service:
-  environment:
-    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudforge_notifications
-    SPRING_DATASOURCE_USERNAME: cloudforge
-    SPRING_DATASOURCE_PASSWORD: cloudforge123
-    SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-    MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
-    MAIL_PORT: ${MAIL_PORT:-587}
-    MAIL_USERNAME: ${MAIL_USERNAME:-noreply@cloudforgetech.in}
-    MAIL_PASSWORD: ${MAIL_PASSWORD:-}  # ← Empty, causes auth failure
+    NOTIFICATION_FROM_EMAIL: noreply@cloudforge.io
+    NOTIFICATION_FROM_NAME: CloudForge
 ```
 
 ---
 
-## 🧪 Testing Without Email
+## 🌐 Access MailHog
 
-You can still test the notification service functionality:
+**Web UI**: http://localhost:8025
 
-### 1. Check Kafka Consumer is Running
+Features:
+- View all sent emails in real-time
+- Search and filter emails
+- View HTML and plain text versions
+- Download email content
+- Delete emails
 
+---
+
+## ✅ Service Status
+
+The notification service is now fully operational:
+
+- ✅ **Running** - Container is up and operational
+- ✅ **Connected to Kafka** - Can consume events
+- ✅ **Connected to PostgreSQL** - Database connection working
+- ✅ **Registered with Eureka** - Service discovery working
+- ✅ **Mail Server Connected** - MailHog SMTP working
+- ✅ **Health Check Passing** - Returns 200 OK
+
+---
+
+## 🧪 Testing Email Functionality
+
+### 1. Trigger a Test Email
+
+You can trigger emails through various application events:
+
+**Option A: Register a New User**
 ```bash
-docker logs cloudforge-notification-service | grep -i kafka
+curl -X POST http://localhost:8080/api/users/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "testuser",
+    "email": "test@example.com",
+    "password": "Test123!"
+  }'
 ```
 
-### 2. Send a Test Event via Kafka
+**Option B: Place an Order**
+1. Login to the frontend at http://localhost:3000
+2. Add products to cart
+3. Complete checkout
+4. Order confirmation email will be sent
 
+**Option C: Send via Kafka Event**
 ```bash
 # Access Kafka container
 docker exec -it cloudforge-kafka bash
 
-# Create a test message
+# Send order event
 kafka-console-producer --bootstrap-server localhost:9092 --topic order-events
-# Then type a JSON message and press Enter
+# Paste this JSON and press Enter:
+{"orderId":"TEST-001","userId":"user123","email":"test@example.com","status":"CONFIRMED"}
 ```
+
+### 2. View Emails in MailHog
+
+1. Open http://localhost:8025 in your browser
+2. You'll see all captured emails
+3. Click on any email to view:
+   - Subject and sender
+   - HTML and plain text versions
+   - Full headers
+   - Raw email source
 
 ### 3. Check Notification Database
 
@@ -192,47 +113,69 @@ kafka-console-producer --bootstrap-server localhost:9092 --topic order-events
 docker exec -it cloudforge-postgres psql -U cloudforge -d cloudforge_notifications
 
 # View notifications table
-SELECT * FROM notifications;
+SELECT * FROM notifications ORDER BY created_at DESC LIMIT 10;
 ```
 
 ---
 
-## 🎯 Recommended Action for Development
+## 🎯 Benefits of MailHog
 
-**For now, you can safely ignore the unhealthy status** if you don't need email functionality.
+### For Development
+- **No configuration needed** - Works out of the box
+- **See all emails** - Nothing gets lost
+- **Fast testing** - Instant email delivery
+- **No spam** - Emails never leave your machine
 
-The notification service is:
-- Running correctly
-- Processing Kafka events
-- Storing notifications in the database
+### For Testing
+- **Verify email content** - Check HTML rendering
+- **Test email templates** - See exactly what users receive
+- **Debug issues** - View full headers and source
+- **Automated testing** - API available for test automation
 
-The only issue is the health check failing due to missing email credentials, which is expected in a development environment.
+### For Team Collaboration
+- **Shared inbox** - Everyone sees the same emails
+- **No cleanup needed** - Restart container to clear
+- **Safe environment** - No risk of sending test emails to real users
 
 ---
 
-## 🚀 Quick Fix for Production
+## 🔄 Alternative: Production Email Setup
 
-When deploying to production:
+When deploying to production, replace MailHog with a real email service:
 
-1. **Use a proper email service**:
-   - SendGrid
-   - AWS SES
-   - Mailgun
-   - Or your company's SMTP server
+### Option 1: Gmail (Small Scale)
 
-2. **Store credentials securely**:
-   - Use HashiCorp Vault
-   - Azure Key Vault
-   - Kubernetes Secrets
-   - Never commit credentials to git
+Create `.env` file in `infrastructure/docker/`:
+```env
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-specific-password
+```
 
-3. **Configure environment variables**:
-   ```bash
-   MAIL_HOST=smtp.sendgrid.net
-   MAIL_PORT=587
-   MAIL_USERNAME=apikey
-   MAIL_PASSWORD=<your-sendgrid-api-key>
-   ```
+### Option 2: SendGrid (Recommended for Production)
+
+```env
+MAIL_HOST=smtp.sendgrid.net
+MAIL_PORT=587
+MAIL_USERNAME=apikey
+MAIL_PASSWORD=your-sendgrid-api-key
+```
+
+### Option 3: AWS SES
+
+```env
+MAIL_HOST=email-smtp.us-east-1.amazonaws.com
+MAIL_PORT=587
+MAIL_USERNAME=your-aws-smtp-username
+MAIL_PASSWORD=your-aws-smtp-password
+```
+
+Then restart the notification service:
+```bash
+cd infrastructure/docker
+docker-compose restart notification-service
+```
 
 ---
 
@@ -244,9 +187,9 @@ When deploying to production:
 | Kafka Connection | ✅ | Can consume events |
 | Database Connection | ✅ | PostgreSQL working |
 | Eureka Registration | ✅ | Service discovery OK |
-| Email Functionality | ❌ | No valid SMTP credentials |
-| Health Check | ❌ | Returns 503 due to mail check |
-| **Overall Impact** | ⚠️ | **Service works, but can't send emails** |
+| Email Functionality | ✅ | MailHog SMTP configured |
+| Health Check | ✅ | Returns 200 OK |
+| **Overall Impact** | ✅ | **Fully operational with email testing** |
 
 ---
 
@@ -254,8 +197,9 @@ When deploying to production:
 
 - [Docker Compose Configuration](infrastructure/docker/docker-compose.yml)
 - [Notification Service Guide](docs/services/notification-service-guide.md)
-- [Environment Variables](infrastructure/docker/README.md#environment-variables)
+- [MailHog Documentation](https://github.com/mailhog/MailHog)
+- [Running Containers Guide](RUNNING_CONTAINERS.md)
 
 ---
 
-**Conclusion**: The notification service is functioning correctly for development purposes. The unhealthy status is expected without valid email credentials and does not affect the core functionality of the CloudForge application.
+**Conclusion**: The notification service is now fully functional with MailHog providing a complete email testing solution for development. All emails are captured and can be viewed at http://localhost:8025. 🎉

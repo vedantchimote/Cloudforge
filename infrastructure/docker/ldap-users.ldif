@@ -1,0 +1,110 @@
+# Create organizational units
+dn: ou=users,dc=cloudforge,dc=io
+objectClass: organizationalUnit
+ou: users
+
+dn: ou=groups,dc=cloudforge,dc=io
+objectClass: organizationalUnit
+ou: groups
+
+# Create groups
+dn: cn=admins,ou=groups,dc=cloudforge,dc=io
+objectClass: groupOfNames
+cn: admins
+member: uid=admin,ou=users,dc=cloudforge,dc=io
+
+dn: cn=users,ou=groups,dc=cloudforge,dc=io
+objectClass: groupOfNames
+cn: users
+member: uid=john.doe,ou=users,dc=cloudforge,dc=io
+
+# Create test users
+dn: uid=admin,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: admin
+cn: Admin User
+sn: User
+givenName: Admin
+mail: admin@cloudforge.io
+userPassword: {SSHA}Admin123!
+uidNumber: 10000
+gidNumber: 10000
+homeDirectory: /home/admin
+loginShell: /bin/bash
+
+dn: uid=john.doe,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: john.doe
+cn: John Doe
+sn: Doe
+givenName: John
+mail: john.doe@cloudforge.io
+userPassword: {SSHA}Password123!
+uidNumber: 10001
+gidNumber: 10001
+homeDirectory: /home/john.doe
+loginShell: /bin/bash
+
+dn: uid=jane.smith,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: jane.smith
+cn: Jane Smith
+sn: Smith
+givenName: Jane
+mail: jane.smith@cloudforge.io
+userPassword: {SSHA}Password123!
+uidNumber: 10002
+gidNumber: 10002
+homeDirectory: /home/jane.smith
+loginShell: /bin/bash
+
+dn: uid=bob.johnson,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: bob.johnson
+cn: Bob Johnson
+sn: Johnson
+givenName: Bob
+mail: bob.johnson@cloudforge.io
+userPassword: {SSHA}Password123!
+uidNumber: 10003
+gidNumber: 10003
+homeDirectory: /home/bob.johnson
+loginShell: /bin/bash
+
+dn: uid=alice.williams,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: alice.williams
+cn: Alice Williams
+sn: Williams
+givenName: Alice
+mail: alice.williams@cloudforge.io
+userPassword: {SSHA}Password123!
+uidNumber: 10004
+gidNumber: 10004
+homeDirectory: /home/alice.williams
+loginShell: /bin/bash
+
+dn: uid=charlie.brown,ou=users,dc=cloudforge,dc=io
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: charlie.brown
+cn: Charlie Brown
+sn: Brown
+givenName: Charlie
+mail: charlie.brown@cloudforge.io
+userPassword: {SSHA}Password123!
+uidNumber: 10005
+gidNumber: 10005
+homeDirectory: /home/charlie.brown
+loginShell: /bin/bash

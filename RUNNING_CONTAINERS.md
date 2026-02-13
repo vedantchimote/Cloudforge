@@ -1,6 +1,6 @@
 # 🎉 CloudForge Containers - Running Successfully!
 
-**Status**: ✅ All 16 containers are running
+**Status**: ✅ All 17 containers are running
 
 **Started**: February 12, 2026
 
@@ -15,6 +15,7 @@
 | **Eureka Dashboard** | http://localhost:8761 | Service Discovery (eureka/eureka123) |
 | **Kafka UI** | http://localhost:8091 | Kafka management interface |
 | **LDAP Admin** | http://localhost:8090 | LDAP management (cn=admin,dc=cloudforge,dc=io / admin123) |
+| **MailHog UI** | http://localhost:8025 | Email testing interface |
 
 ---
 
@@ -30,7 +31,7 @@
 - ✓ **Payment Service** - Payment Processing (Port 8084)
 - ✓ **Notification Service** - Email/SMS Notifications (Port 8085)
 
-### Infrastructure Layer (8 containers)
+### Infrastructure Layer (9 containers)
 - ✓ **PostgreSQL** - Relational Database (Port 5432)
 - ✓ **MongoDB** - Document Database (Port 27017)
 - ✓ **Redis** - Cache & Session Store (Port 6379)
@@ -39,6 +40,7 @@
 - ✓ **Kafka UI** - Kafka Management (Port 8091)
 - ✓ **OpenLDAP** - Authentication Directory (Port 389)
 - ✓ **LDAP Admin** - LDAP Management UI (Port 8090)
+- ✓ **MailHog** - Email Testing (SMTP: 1025, UI: 8025)
 
 ---
 
@@ -214,5 +216,5 @@ docker inspect cloudforge-frontend --format='{{.State.Health.Status}}'
 
 **Status**: ✅ All systems operational
 **Last Updated**: February 12, 2026
-**Total Containers**: 16
-**Healthy Services**: 15/16 (Notification Service may show unhealthy initially)
+**Total Containers**: 17
+**Healthy Services**: 16/17 (All services healthy with MailHog)
