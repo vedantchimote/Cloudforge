@@ -11,6 +11,15 @@ import CheckoutPage from '@/pages/CheckoutPage';
 import OrderConfirmationPage from '@/pages/OrderConfirmationPage';
 import OrdersPage from '@/pages/OrdersPage';
 import AccountPage from '@/pages/AccountPage';
+import AboutPage from '@/pages/AboutPage';
+import CareersPage from '@/pages/CareersPage';
+import PressPage from '@/pages/PressPage';
+import SellPage from '@/pages/SellPage';
+import AffiliatePage from '@/pages/AffiliatePage';
+import AdvertisePage from '@/pages/AdvertisePage';
+import ShippingPage from '@/pages/ShippingPage';
+import ReturnsPage from '@/pages/ReturnsPage';
+import HelpPage from '@/pages/HelpPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,6 +58,15 @@ function App() {
             <Route path="/order/:id" element={<OrderConfirmationPage />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/account" element={<AccountPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/careers" element={<CareersPage />} />
+            <Route path="/press" element={<PressPage />} />
+            <Route path="/sell" element={<SellPage />} />
+            <Route path="/affiliate" element={<AffiliatePage />} />
+            <Route path="/advertise" element={<AdvertisePage />} />
+            <Route path="/shipping" element={<ShippingPage />} />
+            <Route path="/returns" element={<ReturnsPage />} />
+            <Route path="/help" element={<HelpPage />} />
           </Route>
         </Routes>
       </Router>
