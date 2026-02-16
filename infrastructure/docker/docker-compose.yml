@@ -141,6 +141,7 @@ services:
     container_name: cloudforge-api-gateway
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
+      JWT_SECRET: cloudforge-super-secret-key-for-jwt-token-generation-min-256-bits
     ports:
       - "8080:8080"
     depends_on:
