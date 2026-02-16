@@ -44,7 +44,8 @@
       "group": "Frontend",
       "pages": [
         "frontend/overview",
-        "frontend/components"
+        "frontend/components",
+        "frontend/pages"
       ]
     },
     {

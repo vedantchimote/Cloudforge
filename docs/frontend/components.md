@@ -97,6 +97,111 @@ User's order history.
 - Order totals and dates
 - Link to order details
 
+### AccountPage
+
+User account management and profile.
+
+**Features:**
+- User profile information (username, email, role)
+- Account status and member since date
+- Quick action buttons (Orders, Cart)
+- Sign out functionality
+
+---
+
+## Informational Pages
+
+### AboutPage
+
+Company information and values.
+
+**Sections:**
+- Company story and mission
+- Technology stack showcase
+- Core values (Innovation, Reliability, Security)
+- Backend and frontend tech details
+
+### CareersPage
+
+Career opportunities at CloudForge.
+
+**Features:**
+- Why work with us section
+- Open positions with job details
+- Apply now buttons
+- Contact for unlisted roles
+
+### PressPage
+
+Press releases and media information.
+
+**Features:**
+- Latest press releases with dates
+- Read more links for each release
+- Media contact information
+
+### SellPage
+
+Seller program information.
+
+**Features:**
+- Benefits of selling on CloudForge
+- How it works (3-step process)
+- Large customer base highlights
+- Registration CTA
+
+### AffiliatePage
+
+Affiliate program details.
+
+**Features:**
+- 10% commission rate highlight
+- 30-day cookie tracking
+- How it works (4-step process)
+- Who can join section
+
+### AdvertisePage
+
+Advertising solutions for businesses.
+
+**Features:**
+- Sponsored products and display ads
+- Why advertise section
+- Getting started guide
+- Campaign creation CTA
+
+### ShippingPage
+
+Shipping information and policies.
+
+**Features:**
+- Shipping options with rates (Standard, Express, Free, Next-Day)
+- Processing time and delivery areas
+- Order tracking information
+- FAQs section
+
+### ReturnsPage
+
+Return and replacement policies.
+
+**Features:**
+- 30-day return policy highlight
+- Step-by-step return process
+- Eligible and non-returnable items
+- Replacement process for defective items
+- FAQs section
+
+### HelpPage
+
+Comprehensive help center.
+
+**Features:**
+- Search functionality
+- Browse help topics by category
+- Frequently asked questions
+- Contact options (Email, Phone, Live Chat)
+- Icons from Lucide React
+
 ---
 
 ## Reusable Components

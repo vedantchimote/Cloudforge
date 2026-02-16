@@ -41,7 +41,17 @@ frontend/
 │   │   ├── CartPage.tsx
 │   │   ├── CheckoutPage.tsx
 │   │   ├── OrdersPage.tsx
-│   │   └── OrderConfirmationPage.tsx
+│   │   ├── OrderConfirmationPage.tsx
+│   │   ├── AccountPage.tsx
+│   │   ├── AboutPage.tsx
+│   │   ├── CareersPage.tsx
+│   │   ├── PressPage.tsx
+│   │   ├── SellPage.tsx
+│   │   ├── AffiliatePage.tsx
+│   │   ├── AdvertisePage.tsx
+│   │   ├── ShippingPage.tsx
+│   │   ├── ReturnsPage.tsx
+│   │   └── HelpPage.tsx
 │   ├── services/       # API layer
 │   │   ├── api.ts           # Axios instance
 │   │   ├── authService.ts   # Auth API calls
@@ -64,6 +74,8 @@ frontend/
 
 Defined in `App.tsx` using React Router:
 
+### Core Shopping Pages
+
 | Path | Component | Description |
 | :--- | :--- | :--- |
 | `/` | HomePage | Amazon-style landing with hero, deals, categories |
@@ -74,6 +86,21 @@ Defined in `App.tsx` using React Router:
 | `/checkout` | CheckoutPage | Address form & Razorpay payment |
 | `/orders` | OrdersPage | Order history & status |
 | `/order/:id` | OrderConfirmationPage | Order details & success message |
+| `/account` | AccountPage | User profile and account settings |
+
+### Informational Pages
+
+| Path | Component | Description |
+| :--- | :--- | :--- |
+| `/about` | AboutPage | Company story, mission, tech stack, and values |
+| `/careers` | CareersPage | Job openings and career opportunities |
+| `/press` | PressPage | Press releases and media contact |
+| `/sell` | SellPage | Seller program information and registration |
+| `/affiliate` | AffiliatePage | Affiliate program with 10% commission |
+| `/advertise` | AdvertisePage | Advertising solutions and campaign management |
+| `/shipping` | ShippingPage | Shipping rates, options, and policies |
+| `/returns` | ReturnsPage | 30-day return policy and replacement process |
+| `/help` | HelpPage | Help center with FAQs and contact information |
 
 ## State Management
 
