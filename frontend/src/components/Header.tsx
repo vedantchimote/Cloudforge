@@ -26,8 +26,7 @@ export default function Header() {
             <div className="flex items-center px-4 py-3 gap-4 max-w-7xl mx-auto">
                 {/* Logo */}
                 <Link to="/" className="flex items-center shrink-0">
-                    <span className="text-2xl font-bold text-gray-900">Cloud</span>
-                    <span className="text-2xl font-bold text-[#FF9900]">Forge</span>
+                    <img src="/logo.svg" alt="CloudForge" className="h-12" />
                 </Link>
 
                 {/* Search Bar */}

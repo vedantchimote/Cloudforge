@@ -67,8 +67,7 @@ export default function Footer() {
             <div className="border-t border-gray-300 py-6">
                 <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
                     <Link to="/" className="flex items-center">
-                        <span className="text-xl font-bold text-gray-900">Cloud</span>
-                        <span className="text-xl font-bold text-[#FF9900]">Forge</span>
+                        <img src="/logo.svg" alt="CloudForge" className="h-10" />
                     </Link>
                     <p className="text-xs text-gray-500">
                         © 2026, CloudForge. All rights reserved.

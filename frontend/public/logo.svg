@@ -1,0 +1,20 @@
+<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cloud shape -->
+  <path d="M25 35C25 35 20 35 18 33C16 31 15 28 15 25C15 22 16 19 18 17C18 17 18 15 20 13C22 11 25 10 28 10C31 10 34 11 36 13C38 11 41 10 44 10C47 10 50 11 52 13C54 15 55 18 55 21C55 21 58 21 60 23C62 25 63 28 63 31C63 34 62 37 60 39C58 41 55 42 52 42H25C25 42 25 35 25 35Z" fill="#FF9900" opacity="0.9"/>
+  
+  <!-- Anvil/Forge shape -->
+  <path d="M30 42L35 50H55L60 42H30Z" fill="#FF6600"/>
+  <rect x="32" y="48" width="26" height="4" rx="1" fill="#CC5500"/>
+  
+  <!-- Spark/Lightning effect -->
+  <path d="M42 38L40 42L43 42L41 46L45 40L42 40L44 38Z" fill="#FFD700"/>
+  
+  <!-- Text: Cloud -->
+  <text x="70" y="32" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#111827">Cloud</text>
+  
+  <!-- Text: Forge -->
+  <text x="70" y="52" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#FF9900">Forge</text>
+  
+  <!-- Tagline -->
+  <text x="72" y="58" font-family="Arial, sans-serif" font-size="6" fill="#6B7280" letter-spacing="1">MICROSERVICES E-COMMERCE</text>
+</svg>

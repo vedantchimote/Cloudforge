@@ -1,0 +1,14 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="32" fill="#FF9900"/>
+  
+  <!-- Cloud shape -->
+  <path d="M20 35C20 35 17 35 15.5 33.5C14 32 13 29.5 13 27C13 24.5 14 22 15.5 20.5C15.5 20.5 15.5 19 17 17.5C18.5 16 21 15 24 15C27 15 30 16 32 17.5C33.5 16 36 15 39 15C42 15 45 16 47 17.5C49 19 50 21.5 50 24C50 24 52.5 24 54 25.5C55.5 27 56.5 29.5 56.5 32C56.5 34.5 55.5 37 54 38.5C52.5 40 50 41 47 41H20C20 41 20 35 20 35Z" fill="white" opacity="0.95"/>
+  
+  <!-- Anvil/Forge -->
+  <path d="M24 41L28 48H44L48 41H24Z" fill="#FFD700"/>
+  <rect x="26" y="46" width="20" height="3" rx="1" fill="#FFA500"/>
+  
+  <!-- Lightning spark -->
+  <path d="M36 36L34 40L37 40L35 44L39 38L36 38L38 36Z" fill="#FF6600"/>
+</svg>
