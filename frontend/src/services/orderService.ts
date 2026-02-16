@@ -42,22 +42,22 @@ export interface Order {
 
 export const orderService = {
     createOrder: async (data: CreateOrderRequest): Promise<Order> => {
-        const response = await api.post('/api/orders', data);
+        const response = await api.post('/orders', data);
         return response.data;
     },
 
     getOrders: async (userId: string): Promise<Order[]> => {
-        const response = await api.get(`/api/orders/user/${userId}`);
+        const response = await api.get(`/orders/user/${userId}`);
         return response.data;
     },
 
     getOrderById: async (orderId: string): Promise<Order> => {
-        const response = await api.get(`/api/orders/${orderId}`);
+        const response = await api.get(`/orders/${orderId}`);
         return response.data;
     },
 
     cancelOrder: async (orderId: string): Promise<Order> => {
-        const response = await api.post(`/api/orders/${orderId}/cancel`);
+        const response = await api.post(`/orders/${orderId}/cancel`);
         return response.data;
     },
 };

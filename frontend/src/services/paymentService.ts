@@ -22,7 +22,7 @@ export interface PaymentResult {
 
 export const paymentService = {
     createRazorpayOrder: async (orderId: string, amount: number): Promise<RazorpayOrder> => {
-        const response = await api.post('/api/payments/create', {
+        const response = await api.post('/payments/create', {
             orderId,
             amount,
             currency: 'INR',
@@ -31,12 +31,12 @@ export const paymentService = {
     },
 
     verifyPayment: async (verification: PaymentVerification): Promise<PaymentResult> => {
-        const response = await api.post('/api/payments/verify', verification);
+        const response = await api.post('/payments/verify', verification);
         return response.data;
     },
 
     getPaymentStatus: async (paymentId: string): Promise<PaymentResult> => {
-        const response = await api.get(`/api/payments/${paymentId}`);
+        const response = await api.get(`/payments/${paymentId}`);
         return response.data;
     },
 };
