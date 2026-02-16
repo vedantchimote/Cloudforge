@@ -49,7 +49,7 @@ public class AuthService {
                             request.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String token = tokenProvider.generateToken(authentication);
+            String token = tokenProvider.generateTokenWithUserId(authentication.getName(), user.getId().toString());
 
             log.info("User logged in via database auth: {}", request.getUsername());
             return LoginResponse.of(token, UserDTO.fromEntity(user));
@@ -93,7 +93,7 @@ public class AuthService {
                         request.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = tokenProvider.generateToken(authentication);
+        String token = tokenProvider.generateTokenWithUserId(authentication.getName(), savedUser.getId().toString());
 
         return LoginResponse.of(token, UserDTO.fromEntity(savedUser));
     }
@@ -152,7 +152,7 @@ public class AuthService {
                             request.getUsername(),
                             request.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String token = tokenProvider.generateToken(authentication);
+            String token = tokenProvider.generateTokenWithUserId(authentication.getName(), user.getId().toString());
             
             log.info("User logged in via LDAP auth: {}", request.getUsername());
             return LoginResponse.of(token, UserDTO.fromEntity(user));

@@ -145,6 +145,14 @@ logging:
   level:
     org.springframework.cloud.gateway: DEBUG
     reactor.netty: INFO
+    io.cloudforge.apigateway: DEBUG
+    io.cloudforge.apigateway.filter: INFO
+    io.cloudforge.apigateway.security: INFO
+
+# JWT Configuration
+jwt:
+  secret: cloudforge-jwt-secret-key-that-is-at-least-256-bits-long-for-hs256
+  expiration: 86400000  # 24 hours in milliseconds
 
 # Swagger/OpenAPI Configuration
 springdoc:

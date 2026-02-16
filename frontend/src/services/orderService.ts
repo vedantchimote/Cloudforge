@@ -42,7 +42,25 @@ export interface Order {
 
 export const orderService = {
     createOrder: async (data: CreateOrderRequest): Promise<Order> => {
-        const response = await api.post('/orders', data);
+        // Transform nested shippingAddress to flat structure expected by backend
+        const flatRequest = {
+            items: data.items.map(item => ({
+                productId: item.productId,
+                quantity: item.quantity
+            })),
+            shippingAddress: `${data.shippingAddress.addressLine1}${
+                data.shippingAddress.addressLine2 
+                    ? ', ' + data.shippingAddress.addressLine2 
+                    : ''
+            }`,
+            shippingCity: data.shippingAddress.city,
+            shippingState: data.shippingAddress.state,
+            shippingZip: data.shippingAddress.postalCode,
+            shippingCountry: data.shippingAddress.country,
+            notes: `${data.shippingAddress.fullName} | ${data.shippingAddress.phone}`
+        };
+        
+        const response = await api.post('/orders', flatRequest);
         return response.data;
     },
 
