@@ -75,8 +75,13 @@ public class OrderService {
         order.calculateTotal();
         Order saved = orderRepository.save(order);
 
-        // Publish event
-        publishOrderCreatedEvent(saved);
+        // Publish event asynchronously after transaction commits
+        try {
+            publishOrderCreatedEvent(saved);
+        } catch (Exception e) {
+            log.error("Failed to publish order created event for order: {}. Error: {}", saved.getId(), e.getMessage());
+            // Don't fail the order creation if event publishing fails
+        }
 
         log.info("Order created successfully: {}", saved.getId());
         return OrderResponse.fromOrder(saved);
@@ -122,8 +127,13 @@ public class OrderService {
         // Clear the cart
         cartService.clearCart(userId);
 
-        // Publish event
-        publishOrderCreatedEvent(saved);
+        // Publish event asynchronously after transaction commits
+        try {
+            publishOrderCreatedEvent(saved);
+        } catch (Exception e) {
+            log.error("Failed to publish order created event for order: {}. Error: {}", saved.getId(), e.getMessage());
+            // Don't fail the checkout if event publishing fails
+        }
 
         log.info("Checkout completed. Order ID: {}", saved.getId());
         return OrderResponse.fromOrder(saved);
