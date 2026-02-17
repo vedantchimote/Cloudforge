@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,6 +8,7 @@ import { useCartStore } from '@/store/cartStore';
 import { useAuthStore } from '@/store/authStore';
 import { orderService } from '@/services/orderService';
 import { paymentService, loadRazorpayScript } from '@/services/paymentService';
+import { userService } from '@/services/userService';
 import type { RazorpayOptions } from '@/services/paymentService';
 
 const addressSchema = z.object({
@@ -34,6 +35,7 @@ export default function CheckoutPage() {
     const { items, getTotal, clearCart } = useCartStore();
     const { user, isAuthenticated } = useAuthStore();
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isLoadingAddress, setIsLoadingAddress] = useState(true);
     const [step, setStep] = useState<'address' | 'payment'>('address');
     const [savedAddress, setSavedAddress] = useState<AddressFormData | null>(null);
 
@@ -45,6 +47,7 @@ export default function CheckoutPage() {
         register,
         handleSubmit,
         formState: { errors },
+        reset,
     } = useForm<AddressFormData>({
         resolver: zodResolver(addressSchema),
         defaultValues: {
@@ -52,8 +55,59 @@ export default function CheckoutPage() {
         },
     });
 
-    const onAddressSubmit = (data: AddressFormData) => {
+    // Fetch user's saved address on mount
+    useEffect(() => {
+        const fetchUserAddress = async () => {
+            if (!isAuthenticated) return;
+            
+            try {
+                const userData = await userService.getCurrentUser();
+                
+                // If user has a saved address, pre-fill the form
+                if (userData.addressLine1) {
+                    const address: AddressFormData = {
+                        fullName: `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || userData.username,
+                        phone: userData.phone || '',
+                        addressLine1: userData.addressLine1,
+                        addressLine2: userData.addressLine2 || '',
+                        city: userData.city || '',
+                        state: userData.state || '',
+                        postalCode: userData.postalCode || '',
+                        country: userData.country || 'India',
+                    };
+                    
+                    reset(address);
+                    setSavedAddress(address);
+                }
+            } catch (error) {
+                console.error('Failed to fetch user address:', error);
+            } finally {
+                setIsLoadingAddress(false);
+            }
+        };
+
+        fetchUserAddress();
+    }, [isAuthenticated, reset]);
+
+    const onAddressSubmit = async (data: AddressFormData) => {
         setSavedAddress(data);
+        
+        // Save address to user profile
+        try {
+            await userService.updateAddress({
+                phone: data.phone,
+                addressLine1: data.addressLine1,
+                addressLine2: data.addressLine2,
+                city: data.city,
+                state: data.state,
+                postalCode: data.postalCode,
+                country: data.country,
+            });
+        } catch (error) {
+            console.error('Failed to save address:', error);
+            // Continue anyway - address is saved locally for this order
+        }
+        
         setStep('payment');
     };
 
@@ -169,7 +223,11 @@ export default function CheckoutPage() {
                                 )}
                             </div>
 
-                            {step === 'address' ? (
+                            {isLoadingAddress ? (
+                                <div className="flex items-center justify-center py-8">
+                                    <div className="w-8 h-8 border-4 border-[#FF9900] border-t-transparent rounded-full animate-spin" />
+                                </div>
+                            ) : step === 'address' ? (
                                 <form onSubmit={handleSubmit(onAddressSubmit)} className="space-y-4">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>

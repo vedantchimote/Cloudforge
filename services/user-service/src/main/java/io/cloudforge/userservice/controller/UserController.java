@@ -41,6 +41,16 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
+    @PutMapping("/me/address")
+    @Operation(summary = "Update current user address")
+    public ResponseEntity<UserDTO> updateCurrentUserAddress(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody io.cloudforge.userservice.dto.UpdateAddressRequest request) {
+        UserDTO currentUser = userService.getUserByUsername(userDetails.getUsername());
+        UserDTO updatedUser = userService.updateAddress(currentUser.getId(), request);
+        return ResponseEntity.ok(updatedUser);
+    }
+
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all users (Admin only)")

@@ -98,4 +98,23 @@ public class UserService {
         userRepository.deleteById(id);
         log.info("Deleted user with id: {}", id);
     }
+
+    @Transactional
+    public UserDTO updateAddress(UUID userId, io.cloudforge.userservice.dto.UpdateAddressRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        user.setPhone(request.getPhone());
+        user.setAddressLine1(request.getAddressLine1());
+        user.setAddressLine2(request.getAddressLine2());
+        user.setCity(request.getCity());
+        user.setState(request.getState());
+        user.setPostalCode(request.getPostalCode());
+        user.setCountry(request.getCountry());
+
+        User savedUser = userRepository.save(user);
+        log.info("Updated address for user: {}", savedUser.getUsername());
+
+        return UserDTO.fromEntity(savedUser);
+    }
 }

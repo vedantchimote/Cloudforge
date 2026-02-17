@@ -22,6 +22,15 @@ public class UserDTO {
     private String role;
     private boolean enabled;
     private LocalDateTime createdAt;
+    
+    // Address fields
+    private String phone;
+    private String addressLine1;
+    private String addressLine2;
+    private String city;
+    private String state;
+    private String postalCode;
+    private String country;
 
     public static UserDTO fromEntity(User user) {
         return UserDTO.builder()
@@ -33,6 +42,13 @@ public class UserDTO {
                 .role(user.getRole().name())
                 .enabled(user.isEnabled())
                 .createdAt(user.getCreatedAt())
+                .phone(user.getPhone())
+                .addressLine1(user.getAddressLine1())
+                .addressLine2(user.getAddressLine2())
+                .city(user.getCity())
+                .state(user.getState())
+                .postalCode(user.getPostalCode())
+                .country(user.getCountry())
                 .build();
     }
 }

@@ -28,7 +28,8 @@ public class ProductService {
                 .map(ProductDTO::fromEntity);
     }
 
-    @Cacheable(value = "product", key = "#id")
+    // Note: Caching disabled due to Redis serialization issues with ProductDTO
+    // Redis was caching LinkedHashMap instead of ProductDTO causing ClassCastException
     public ProductDTO getProductById(String id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found: " + id));
@@ -47,7 +48,7 @@ public class ProductService {
                 .map(ProductDTO::fromEntity);
     }
 
-    @Cacheable(value = "latestProducts")
+    // Note: Caching disabled due to Redis serialization issues with List<ProductDTO>
     public List<ProductDTO> getLatestProducts() {
         return productRepository.findTop10ByActiveTrueOrderByCreatedAtDesc()
                 .stream()
