@@ -41,8 +41,8 @@ public class JwtTokenProvider {
                 .signWith(getSigningKey())
                 .compact();
     }
-
     public String generateTokenWithUserId(String username, String userId) {
+
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
 
