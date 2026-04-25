@@ -28,5 +28,7 @@ yarn-error.log
 
 # Secrets
 .env
+.env.production
+.env.production.secure
 *.pem
 *.key
