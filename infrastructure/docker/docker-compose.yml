@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_DB: cloudforge
       POSTGRES_USER: cloudforge
-      POSTGRES_PASSWORD: cloudforge123
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cloudforge123}
     ports:
       - "5432:5432"
     volumes:
@@ -28,7 +28,7 @@ services:
     container_name: cloudforge-mongodb
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: mongo123
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-mongo123}
       MONGO_INITDB_DATABASE: products
     ports:
       - "27017:27017"
@@ -46,7 +46,7 @@ services:
   redis:
     image: redis:7-alpine
     container_name: cloudforge-redis
-    command: redis-server --requirepass redis123
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redis123}
     ports:
       - "6379:6379"
     volumes:
@@ -140,8 +140,8 @@ services:
       dockerfile: Dockerfile
     container_name: cloudforge-api-gateway
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
-      JWT_SECRET: cloudforge-super-secret-key-for-jwt-token-generation-min-256-bits
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:${EUREKA_PASSWORD:-eureka123}@discovery-server:8761/eureka/
+      JWT_SECRET: ${JWT_SECRET:-cloudforge-super-secret-key-for-jwt-token-generation-min-256-bits}
     ports:
       - "8080:8080"
     depends_on:
@@ -163,11 +163,11 @@ services:
     environment:
       LDAP_ORGANISATION: "CloudForge"
       LDAP_DOMAIN: "cloudforge.io"
-      LDAP_ADMIN_PASSWORD: admin123
-      LDAP_CONFIG_PASSWORD: config123
+      LDAP_ADMIN_PASSWORD: ${LDAP_ADMIN_PASSWORD:-admin123}
+      LDAP_CONFIG_PASSWORD: ${LDAP_CONFIG_PASSWORD:-config123}
       LDAP_READONLY_USER: "true"
       LDAP_READONLY_USER_USERNAME: readonly
-      LDAP_READONLY_USER_PASSWORD: readonly123
+      LDAP_READONLY_USER_PASSWORD: ${LDAP_READONLY_PASSWORD:-readonly123}
     ports:
       - "389:389"
       - "636:636"
@@ -210,13 +210,13 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudforge
       SPRING_DATASOURCE_USERNAME: cloudforge
-      SPRING_DATASOURCE_PASSWORD: cloudforge123
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-cloudforge123}
       SPRING_LDAP_URLS: ldap://openldap:389
       SPRING_LDAP_BASE: dc=cloudforge,dc=io
       SPRING_LDAP_USERNAME: cn=admin,dc=cloudforge,dc=io
-      SPRING_LDAP_PASSWORD: admin123
-      JWT_SECRET: cloudforge-super-secret-key-for-jwt-token-generation-min-256-bits
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
+      SPRING_LDAP_PASSWORD: ${LDAP_ADMIN_PASSWORD:-admin123}
+      JWT_SECRET: ${JWT_SECRET:-cloudforge-super-secret-key-for-jwt-token-generation-min-256-bits}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:${EUREKA_PASSWORD:-eureka123}@discovery-server:8761/eureka/
     ports:
       - "8081:8081"
     depends_on:
@@ -234,13 +234,13 @@ services:
       dockerfile: Dockerfile
     container_name: cloudforge-product-service
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://root:mongo123@mongodb:27017/products?authSource=admin
+      SPRING_DATA_MONGODB_URI: mongodb://root:${MONGO_ROOT_PASSWORD:-mongo123}@mongodb:27017/products?authSource=admin
       SPRING_DATA_MONGODB_DATABASE: products
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
-      SPRING_DATA_REDIS_PASSWORD: redis123
+      SPRING_DATA_REDIS_PASSWORD: ${REDIS_PASSWORD:-redis123}
       SPRING_CACHE_TYPE: none
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:${EUREKA_PASSWORD:-eureka123}@discovery-server:8761/eureka/
     ports:
       - "8082:8082"
     depends_on:
@@ -260,14 +260,14 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudforge_orders
       SPRING_DATASOURCE_USERNAME: cloudforge
-      SPRING_DATASOURCE_PASSWORD: cloudforge123
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-cloudforge123}
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
-      SPRING_DATA_REDIS_PASSWORD: redis123
+      SPRING_DATA_REDIS_PASSWORD: ${REDIS_PASSWORD:-redis123}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       SERVICES_USER_SERVICE_URL: http://user-service:8081
       SERVICES_PRODUCT_SERVICE_URL: http://product-service:8082
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:${EUREKA_PASSWORD:-eureka123}@discovery-server:8761/eureka/
     ports:
       - "8083:8083"
     depends_on:
@@ -289,15 +289,15 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudforge_payments
       SPRING_DATASOURCE_USERNAME: cloudforge
-      SPRING_DATASOURCE_PASSWORD: cloudforge123
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-cloudforge123}
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
-      SPRING_DATA_REDIS_PASSWORD: redis123
+      SPRING_DATA_REDIS_PASSWORD: ${REDIS_PASSWORD:-redis123}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-rzp_test_xxxxx}
       RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-xxxxx}
       RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET:-xxxxx}
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:${EUREKA_PASSWORD:-eureka123}@discovery-server:8761/eureka/
     ports:
       - "8084:8084"
     depends_on:
@@ -319,7 +319,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cloudforge_notifications
       SPRING_DATASOURCE_USERNAME: cloudforge
-      SPRING_DATASOURCE_PASSWORD: cloudforge123
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-cloudforge123}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       MAIL_HOST: ${MAIL_HOST:-mailhog}
       MAIL_PORT: ${MAIL_PORT:-1025}
@@ -330,7 +330,7 @@ services:
       MAIL_SMTP_STARTTLS_REQUIRED: ${MAIL_SMTP_STARTTLS_REQUIRED:-false}
       NOTIFICATION_FROM_EMAIL: ${NOTIFICATION_FROM_EMAIL:-noreply@cloudforge.io}
       NOTIFICATION_FROM_NAME: ${NOTIFICATION_FROM_NAME:-CloudForge}
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:${EUREKA_PASSWORD:-eureka123}@discovery-server:8761/eureka/
     ports:
       - "8085:8085"
     depends_on:
@@ -350,7 +350,7 @@ services:
       dockerfile: Dockerfile
     container_name: cloudforge-swagger-aggregator
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:eureka123@discovery-server:8761/eureka/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:${EUREKA_PASSWORD:-eureka123}@discovery-server:8761/eureka/
     ports:
       - "8086:8086"
     depends_on:
