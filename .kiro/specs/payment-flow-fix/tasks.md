@@ -41,31 +41,31 @@
   - Validate no data loss
 
 ## 4. Error Handling
-- [ ] 4.1 Add global error handler to API Gateway
+- [x] 4.1 Add global error handler to API Gateway
   - Handle JWT validation errors (401)
   - Handle malformed requests (400)
   - Return consistent error format
-- [ ] 4.2 Update frontend error handling
+- [x] 4.2 Update frontend error handling
   - Display authentication errors
   - Show validation errors
   - Handle network errors gracefully
 
 ## 5. Testing
-- [ ] 5.1 Unit test JwtTokenProvider
+- [x] 5.1 Unit test JwtTokenProvider
   - Test token extraction
   - Test token validation
   - Test user ID extraction
   - Test error cases
-- [ ] 5.2 Unit test JwtAuthenticationFilter
+- [x] 5.2 Unit test JwtAuthenticationFilter
   - Test filter logic
   - Test header addition
   - Test authentication failures
-- [ ] 5.3 Integration test order creation flow
+- [x] 5.3 Integration test order creation flow
   - Test with valid JWT token
   - Test with invalid token
   - Test with expired token
   - Test with missing token
-- [ ] 5.4 Manual end-to-end testing
+- [x] 5.4 Manual end-to-end testing
   - Login as LDAP user
   - Add products to cart
   - Complete checkout flow
@@ -88,29 +88,29 @@
   - Verify all services healthy
 
 ## 7. Documentation
-- [ ] 7.1 Update API documentation
+- [x] 7.1 Update API documentation
   - Document X-User-Id header requirement
   - Update order creation endpoint docs
   - Add authentication section
-- [ ] 7.2 Update README
+- [x] 7.2 Update README
   - Document JWT configuration
   - Add troubleshooting section
   - Update environment variables list
-- [ ] 7.3 Update Mintlify docs
+- [x] 7.3 Update Mintlify docs
   - Update API Gateway documentation
   - Update order service documentation
   - Add authentication flow diagram
 
 ## 8. Verification and Monitoring
-- [ ] 8.1 Verify order creation works
+- [x] 8.1 Verify order creation works
   - Test with multiple users
   - Test with different addresses
   - Verify orders in database
-- [ ] 8.2 Check logs for errors
+- [x] 8.2 Check logs for errors
   - Review API Gateway logs
   - Review order service logs
   - Fix any issues found
-- [ ] 8.3 Test error scenarios
+- [x] 8.3 Test error scenarios
   - Test with expired token
   - Test with invalid token
   - Test with missing fields
