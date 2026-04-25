@@ -48,6 +48,11 @@ public class JwtTokenProvider {
      * @return true if token is valid, false otherwise
      */
     public boolean validateToken(String token) {
+        if (token == null || token.trim().isEmpty()) {
+            log.warn("Token is null or empty");
+            return false;
+        }
+        
         try {
             log.debug("Validating JWT token (first 20 chars): {}", token.substring(0, Math.min(20, token.length())));
             log.debug("JWT secret length: {} bytes", jwtSecret.getBytes(StandardCharsets.UTF_8).length);

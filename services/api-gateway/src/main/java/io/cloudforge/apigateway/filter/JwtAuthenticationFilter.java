@@ -1,5 +1,6 @@
 package io.cloudforge.apigateway.filter;
 
+import io.cloudforge.apigateway.exception.JwtAuthenticationException;
 import io.cloudforge.apigateway.security.JwtTokenProvider;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +9,6 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -53,51 +53,56 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
             return chain.filter(exchange);
         }
 
-        // Extract Authorization header
-        String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        
-        if (authHeader == null || authHeader.isEmpty()) {
-            log.warn("Missing Authorization header for path: {}", path);
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
+        try {
+            // Extract Authorization header
+            String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+            
+            if (authHeader == null || authHeader.isEmpty()) {
+                log.warn("Missing Authorization header for path: {}", path);
+                throw new JwtAuthenticationException("Missing or invalid authentication token");
+            }
+
+            // Extract JWT token
+            String token = jwtTokenProvider.extractToken(authHeader);
+            if (token == null) {
+                log.warn("Invalid Authorization header format for path: {}", path);
+                throw new JwtAuthenticationException("Invalid Authorization header format. Expected: Bearer <token>");
+            }
+
+            log.info("Extracted JWT token (first 30 chars): {}", token.substring(0, Math.min(30, token.length())));
+
+            // Validate token
+            if (!jwtTokenProvider.validateToken(token)) {
+                log.error("JWT token validation FAILED for path: {}", path);
+                throw new JwtAuthenticationException("Invalid or expired authentication token");
+            }
+            
+            log.info("JWT token validation PASSED for path: {}", path);
+
+            // Extract user ID from token
+            String userId = jwtTokenProvider.extractUserId(token);
+            if (userId == null) {
+                log.warn("User ID not found in JWT token for path: {}", path);
+                throw new JwtAuthenticationException("User ID not found in authentication token");
+            }
+
+            // Add X-User-Id header to downstream request
+            ServerHttpRequest modifiedRequest = request.mutate()
+                    .header("X-User-Id", userId)
+                    .build();
+
+            log.info("Added X-User-Id header: {} for path: {}", userId, path);
+
+            // Continue with modified request
+            return chain.filter(exchange.mutate().request(modifiedRequest).build());
+            
+        } catch (JwtAuthenticationException e) {
+            // Re-throw to be handled by GlobalErrorWebExceptionHandler
+            return Mono.error(e);
+        } catch (Exception e) {
+            log.error("Unexpected error during JWT authentication for path: {}", path, e);
+            return Mono.error(new JwtAuthenticationException("Authentication failed due to an unexpected error", e));
         }
-
-        // Extract JWT token
-        String token = jwtTokenProvider.extractToken(authHeader);
-        if (token == null) {
-            log.warn("Invalid Authorization header format for path: {}", path);
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
-        }
-
-        log.info("Extracted JWT token (first 30 chars): {}", token.substring(0, Math.min(30, token.length())));
-
-        // Validate token
-        if (!jwtTokenProvider.validateToken(token)) {
-            log.error("JWT token validation FAILED for path: {}. Check API Gateway logs for detailed error.", path);
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
-        }
-        
-        log.info("JWT token validation PASSED for path: {}", path);
-
-        // Extract user ID from token
-        String userId = jwtTokenProvider.extractUserId(token);
-        if (userId == null) {
-            log.warn("User ID not found in JWT token for path: {}", path);
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
-        }
-
-        // Add X-User-Id header to downstream request
-        ServerHttpRequest modifiedRequest = request.mutate()
-                .header("X-User-Id", userId)
-                .build();
-
-        log.info("Added X-User-Id header: {} for path: {}", userId, path);
-
-        // Continue with modified request
-        return chain.filter(exchange.mutate().request(modifiedRequest).build());
     }
 
     private boolean isExcludedPath(String path) {
