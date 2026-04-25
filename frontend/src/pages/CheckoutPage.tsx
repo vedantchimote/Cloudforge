@@ -9,6 +9,8 @@ import { useAuthStore } from '@/store/authStore';
 import { orderService } from '@/services/orderService';
 import { paymentService, loadRazorpayScript } from '@/services/paymentService';
 import { userService } from '@/services/userService';
+import ErrorToast from '@/components/ErrorToast';
+import { formatErrorForDisplay, isAuthError } from '@/utils/errorHandler';
 import type { RazorpayOptions } from '@/services/paymentService';
 
 const addressSchema = z.object({
@@ -38,6 +40,7 @@ export default function CheckoutPage() {
     const [isLoadingAddress, setIsLoadingAddress] = useState(true);
     const [step, setStep] = useState<'address' | 'payment'>('address');
     const [savedAddress, setSavedAddress] = useState<AddressFormData | null>(null);
+    const [error, setError] = useState<{ title: string; message: string; details?: string[] } | null>(null);
 
     const total = getTotal();
     const deliveryFee = total >= 499 ? 0 : 40;
@@ -79,8 +82,9 @@ export default function CheckoutPage() {
                     reset(address);
                     setSavedAddress(address);
                 }
-            } catch (error) {
-                console.error('Failed to fetch user address:', error);
+            } catch (err) {
+                console.error('Failed to fetch user address:', err);
+                // Don't show error toast for address fetch failure - it's not critical
             } finally {
                 setIsLoadingAddress(false);
             }
@@ -103,9 +107,10 @@ export default function CheckoutPage() {
                 postalCode: data.postalCode,
                 country: data.country,
             });
-        } catch (error) {
-            console.error('Failed to save address:', error);
+        } catch (err) {
+            console.error('Failed to save address:', err);
             // Continue anyway - address is saved locally for this order
+            // Don't show error toast as it's not critical
         }
         
         setStep('payment');
@@ -115,6 +120,7 @@ export default function CheckoutPage() {
         if (!savedAddress || !user) return;
 
         setIsProcessing(true);
+        setError(null);
 
         try {
             // 1. Create order in backend
@@ -137,7 +143,10 @@ export default function CheckoutPage() {
             // 3. Load Razorpay script
             const loaded = await loadRazorpayScript();
             if (!loaded) {
-                alert('Failed to load payment gateway. Please try again.');
+                setError({
+                    title: 'Payment Gateway Error',
+                    message: 'Failed to load payment gateway. Please try again.',
+                });
                 setIsProcessing(false);
                 return;
             }
@@ -163,8 +172,13 @@ export default function CheckoutPage() {
                         // 6. Clear cart and redirect
                         clearCart();
                         navigate(`/order/${order.id}`);
-                    } catch {
-                        alert('Payment verification failed. Please contact support.');
+                    } catch (err) {
+                        const errorInfo = formatErrorForDisplay(err);
+                        setError({
+                            title: 'Payment Verification Failed',
+                            message: 'Your payment could not be verified. Please contact support.',
+                            details: errorInfo.details,
+                        });
                     }
                 },
                 prefill: {
@@ -179,9 +193,24 @@ export default function CheckoutPage() {
 
             const razorpay = new window.Razorpay(options);
             razorpay.open();
-        } catch (error) {
-            console.error('Payment error:', error);
-            alert('Failed to process payment. Please try again.');
+        } catch (err) {
+            console.error('Payment error:', err);
+            
+            // Handle authentication errors
+            if (isAuthError(err)) {
+                setError({
+                    title: 'Authentication Required',
+                    message: 'Your session has expired. Please log in again.',
+                });
+                setTimeout(() => {
+                    navigate('/login?redirect=/checkout');
+                }, 2000);
+                return;
+            }
+
+            // Format and display error
+            const errorInfo = formatErrorForDisplay(err);
+            setError(errorInfo);
         } finally {
             setIsProcessing(false);
         }
@@ -199,6 +228,17 @@ export default function CheckoutPage() {
 
     return (
         <div className="bg-gray-100 min-h-screen py-6">
+            {/* Error Toast */}
+            {error && (
+                <ErrorToast
+                    type="error"
+                    title={error.title}
+                    message={error.message}
+                    details={error.details}
+                    onClose={() => setError(null)}
+                />
+            )}
+
             <div className="max-w-5xl mx-auto px-4">
                 {/* Checkout Header */}
                 <div className="flex items-center gap-2 mb-6">
