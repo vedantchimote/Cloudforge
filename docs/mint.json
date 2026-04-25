@@ -103,6 +103,7 @@
     {
       "group": "API Reference",
       "pages": [
+        "api/authentication",
         "api/api-reference",
         "api/database-schema",
         "api/api-versioning"

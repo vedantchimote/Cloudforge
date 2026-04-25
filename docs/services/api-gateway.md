@@ -29,9 +29,78 @@ graph LR
 ## Features
 
 - **Dynamic Routing**: Uses Eureka Service Discovery to resolve service locations.
+- **JWT Authentication**: Validates JWT tokens and adds user context headers.
 - **Path Rewriting**: Automatically strips prefixes (e.g., `/api/users/` -> `/`) before forwarding.
 - **CORS Configuration**: Centralized Cross-Origin Resource Sharing settings for frontend integration.
+- **Error Handling**: Consistent error response format across all services.
 - **Actuator Endpoints**: Health and metrics monitoring.
+
+## JWT Authentication
+
+The API Gateway implements centralized JWT authentication for all protected endpoints.
+
+### Authentication Flow
+
+1. **Client Request**: Client includes JWT token in Authorization header
+2. **Token Validation**: Gateway validates token signature and expiration
+3. **User ID Extraction**: Gateway extracts user ID from token claims
+4. **Header Injection**: Gateway adds `X-User-Id` header to request
+5. **Request Forwarding**: Gateway forwards authenticated request to downstream service
+
+### JWT Filter
+
+The `JwtAuthenticationFilter` runs with order `-100` (before other filters) and:
+- Validates JWT token from Authorization header
+- Extracts user ID from token claims
+- Adds `X-User-Id` header for downstream services
+- Returns 401 for invalid/expired tokens
+
+### Public Endpoints
+
+The following endpoints bypass authentication:
+- `/api/auth/**` - Login and registration
+- `/api/products/**` - Product browsing
+- `/swagger-ui/**` - API documentation
+- `/v3/api-docs/**` - OpenAPI specs
+- `/actuator/**` - Health checks
+
+### Configuration
+
+```yaml
+jwt:
+  secret: ${JWT_SECRET:your-secret-key-at-least-256-bits-long}
+  expiration: 86400000  # 24 hours
+```
+
+**Environment Variables:**
+- `JWT_SECRET`: Shared secret for JWT validation (must match user-service)
+- `JWT_EXPIRATION`: Token expiration time in milliseconds
+
+### Error Responses
+
+**401 Unauthorized - Missing Token:**
+```json
+{
+  "error": "Unauthorized",
+  "message": "Missing or invalid authentication token",
+  "status": 401,
+  "path": "/api/orders",
+  "timestamp": "2026-04-19T10:30:00Z"
+}
+```
+
+**401 Unauthorized - Invalid/Expired Token:**
+```json
+{
+  "error": "Unauthorized",
+  "message": "Invalid or expired authentication token",
+  "status": 401,
+  "path": "/api/orders",
+  "timestamp": "2026-04-19T10:30:00Z"
+}
+```
+
+For detailed authentication documentation, see [Authentication Guide](../api/authentication.md).
 
 ## Route Configuration
 

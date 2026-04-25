@@ -142,7 +142,8 @@ cloudforge/
 | [Kubernetes Guide](docs/kubernetes-guide.md) | K8s/Minikube deployment |
 | [Azure Deployment](docs/azure-deployment.md) | Production AKS setup |
 | [Architecture](docs/architecture.md) | System design & diagrams |
-| [API Reference](docs/api-reference.md) | REST API documentation |
+| [API Reference](docs/api/api-reference.md) | REST API documentation |
+| [Authentication Guide](docs/api/authentication.md) | JWT authentication & security |
 | [CI/CD Pipeline](docs/ci-cd-pipeline.md) | GitHub Actions workflows |
 | [Monitoring](docs/monitoring.md) | Prometheus/Grafana setup |
 
@@ -166,12 +167,68 @@ cd frontend && npm run test:e2e
 
 ---
 
+## 🔧 Troubleshooting
+
+### JWT Authentication Issues
+
+**401 Unauthorized Errors:**
+1. Check JWT secret matches between user-service and api-gateway:
+   ```bash
+   docker exec cloudforge-api-gateway env | grep JWT_SECRET
+   docker exec cloudforge-user-service env | grep JWT_SECRET
+   ```
+2. Verify token hasn't expired (24-hour default)
+3. Check Authorization header format: `Bearer <token>`
+
+**Order Creation Fails:**
+1. Verify API Gateway logs show JWT filter running:
+   ```bash
+   docker logs cloudforge-api-gateway --tail 50 | grep "JWT"
+   ```
+2. Check X-User-Id header is being added
+3. Verify order service receives the header
+
+**For more troubleshooting, see:**
+- [Manual Testing Guide](.kiro/specs/payment-flow-fix/MANUAL_TESTING_GUIDE.md)
+- [Authentication Guide](docs/api/authentication.md)
+
+---
+
 ## 🔒 Security
 
+### JWT Authentication
+
+CloudForge uses JWT (JSON Web Token) based authentication with centralized validation at the API Gateway.
+
+**Authentication Flow:**
+1. User logs in with username/password
+2. User service generates JWT token with user ID
+3. Frontend stores token and includes it in Authorization header
+4. API Gateway validates token and adds `X-User-Id` header
+5. Downstream services use `X-User-Id` for user identification
+
+**Configuration:**
+
+```bash
+# Set JWT secret (must be same for user-service and api-gateway)
+export JWT_SECRET="your-secret-key-at-least-256-bits-long"
+export JWT_EXPIRATION=86400000  # 24 hours
+```
+
+**Test Users (LDAP):**
+- Username: `john.doe`, Password: `Password123!`
+- Username: `jane.smith`, Password: `Password123!`
+- Username: `bob.wilson`, Password: `Password123!`
+
+For detailed authentication documentation, see [Authentication Guide](docs/api/authentication.md).
+
+### Security Features
+
 - All secrets managed via **HashiCorp Vault**
-- Authentication via **OpenLDAP**
+- Authentication via **OpenLDAP** and **JWT**
 - Container scanning with **Trivy**
 - DAST scanning with **OWASP ZAP**
+- Centralized error handling with consistent error responses
 - See [Security Guide](docs/security.md)
 
 ---

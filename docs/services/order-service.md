@@ -156,6 +156,20 @@ erDiagram
 
 ## API Reference
 
+### Authentication
+
+All order and cart endpoints require JWT authentication. The API Gateway validates the token and adds the `X-User-Id` header before forwarding requests to the Order Service.
+
+**Required Header:**
+```http
+Authorization: Bearer <jwt_token>
+```
+
+**Automatic Header (added by API Gateway):**
+```http
+X-User-Id: <user-uuid>
+```
+
 ### Cart Management
 
 | Method | Endpoint | Description |
@@ -170,10 +184,64 @@ erDiagram
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| `POST` | `/api/orders` | Create a new order directy |
-| `GET` | `/api/orders` | List user's orders |
+| `POST` | `/api/orders` | Create a new order directly |
+| `GET` | `/api/orders/user/{userId}` | List user's orders |
 | `GET` | `/api/orders/{id}` | Get order details |
 | `PUT` | `/api/orders/{id}/cancel` | Cancel an order |
+
+### Create Order Request Format
+
+**Endpoint:** `POST /api/orders`
+
+**Headers:**
+```http
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "items": [
+    {
+      "productId": "550e8400-e29b-41d4-a716-446655440000",
+      "quantity": 2
+    }
+  ],
+  "shippingAddress": "123 Main St, Apt 4B",
+  "shippingCity": "Mumbai",
+  "shippingState": "Maharashtra",
+  "shippingZip": "400001",
+  "shippingCountry": "India",
+  "notes": "John Doe | +91 9876543210"
+}
+```
+
+**Note:** The `userId` is automatically extracted from the JWT token by the API Gateway. Do not include it in the request body.
+
+**Response:**
+```json
+{
+  "id": "order-uuid",
+  "userId": "user-uuid",
+  "status": "PENDING",
+  "totalAmount": 299.98,
+  "items": [
+    {
+      "productId": "product-uuid",
+      "quantity": 2,
+      "price": 149.99
+    }
+  ],
+  "shippingAddress": "123 Main St, Apt 4B",
+  "shippingCity": "Mumbai",
+  "shippingState": "Maharashtra",
+  "shippingZip": "400001",
+  "shippingCountry": "India",
+  "notes": "John Doe | +91 9876543210",
+  "createdAt": "2026-04-19T10:30:00Z"
+}
+```
 
 ## Configuration
 
