@@ -1,0 +1,75 @@
+# Production Configuration for API Gateway
+# This file is loaded when running with --spring.profiles.active=prod
+
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: ${SSL_KEYSTORE_PATH:classpath:keystore.p12}
+    key-store-password: ${SSL_KEYSTORE_PASSWORD:changeit}
+    key-store-type: PKCS12
+    key-alias: cloudforge
+  # Redirect HTTP to HTTPS
+  http:
+    port: 8080
+
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "${ALLOWED_ORIGINS:https://cloudforgetech.in,https://www.cloudforgetech.in}"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+              - PATCH
+            allowedHeaders:
+              - Content-Type
+              - Authorization
+              - X-Requested-With
+              - Accept
+              - Origin
+            allowCredentials: true
+            maxAge: 3600
+
+# JWT Configuration (use environment variable)
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION:3600000}  # 1 hour in production (instead of 24)
+
+# Logging for production
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    reactor.netty: WARN
+    io.cloudforge.apigateway: INFO
+    io.cloudforge.apigateway.filter: INFO
+    io.cloudforge.apigateway.security: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+  file:
+    name: /var/log/cloudforge/api-gateway.log
+    max-size: 10MB
+    max-history: 30
+
+# Actuator - restrict in production
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# Disable Swagger in production (optional - uncomment if needed)
+# springdoc:
+#   api-docs:
+#     enabled: false
+#   swagger-ui:
+#     enabled: false
